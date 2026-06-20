@@ -3,6 +3,18 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [0.2.0] — 2026-06-20
+### Corrigé
+- **Parité de la source de vérité** : `tokens/tokens.json` était incomplet face à
+  `src/tokens.js` — il manquait la police (`font.family` = Inter), les dégradés,
+  les ombres, le `blur`, le `motion` et le leading/tracking. Un `build:tokens`
+  depuis le JSON aurait *perdu* ces tokens. Tout est remonté dans la source ;
+  `build:tokens` vérifié OK.
+
+### Ajouté
+- `src/tokens.css` : échelle de tailles de police (`--size-*`), `--leading-*`,
+  `--tracking-*`, `--blur-*` et `--shadow-glow-strong` (absents côté CSS jusqu'ici).
+
 ## [0.1.0] — 2026-06-19
 ### Ajouté
 - Composant `SynkLogoAnim` : animation d'entrée du logo (le « S » se tisse depuis

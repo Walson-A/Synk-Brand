@@ -50,6 +50,15 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --weight-regular: 400; --weight-medium: 500; --weight-semibold: 600;
   --weight-bold: 700; --weight-extrabold: 800; --weight-black: 900;
+  /* sizes (px) */
+  --size-cap: 10px; --size-eyebrow: 11px; --size-xs: 12px; --size-sm: 14px;
+  --size-base: 16px; --size-md: 17px; --size-lg: 19px; --size-xl: 24px;
+  --size-2xl: 32px; --size-display: 44px;
+  /* line-height */
+  --leading-tight: 1.1; --leading-snug: 1.25; --leading-normal: 1.5;
+  /* letter-spacing */
+  --tracking-tighter: -0.03em; --tracking-tight: -0.02em; --tracking-normal: 0;
+  --tracking-wide: 0.05em; --tracking-eyebrow: 0.08em;
 
   /* Spacing */
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
@@ -64,6 +73,10 @@
   --shadow-deep: 0px 10px 25px -5px rgba(0,0,0,0.5);
   --shadow-xl: 0px 25px 50px -12px rgba(0,0,0,0.7);
   --shadow-glow: 0px 0px 15px rgba(108,99,255,0.4);
+  --shadow-glow-strong: 0px 0px 30px rgba(108,99,255,0.5);
+
+  /* Blur (backdrop / glow discs) */
+  --blur-sm: 12px; --blur-md: 20px; --blur-lg: 40px;
 
   /* Motion */
   --motion-fast: 150ms; --motion-base: 300ms; --motion-slow: 520ms;
