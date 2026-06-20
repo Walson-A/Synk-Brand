@@ -1,0 +1,29 @@
+name: release
+
+# Publishes @synk/brand to GitHub Packages on every push to main, using
+# npm Trusted Publishing (OIDC) — no NPM_TOKEN secret to manage.
+# (2026 best practice: id-token: write lets npm verify this exact repo/workflow.)
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write   # required for npm Trusted Publishing (OIDC)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@synk'
+      - run: npm ci || npm install
+      - run: npm run build:tokens --if-present
+      # Publishes only when package.json "version" is new. Bump it + update
+      # CHANGELOG.md in the same commit to cut a release.
+      - run: npm publish --provenance --access restricted

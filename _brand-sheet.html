@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --violet:#6C63FF; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#0d0d10; color:#ededed; font-family:'Inter',system-ui,sans-serif; padding:48px 56px 72px; }
+  h1{ font-weight:900; font-size:30px; letter-spacing:-0.02em; margin:0; }
+  .sub{ color:#a3a3a3; font-size:14px; margin:8px 0 0; }
+  h2{ font-weight:800; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8a8a93; margin:48px 0 18px; border-top:1px solid rgba(255,255,255,0.08); padding-top:22px; }
+  .row{ display:flex; gap:24px; flex-wrap:wrap; align-items:flex-end; }
+  .item{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .cap{ font-size:11px; color:#8a8a93; font-weight:600; letter-spacing:0.02em; text-align:center; }
+  .tile{ border-radius:22%; overflow:hidden; border:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; }
+  .sq{ border-radius:0; }
+  .checker{ background-image:linear-gradient(45deg,#2a2a30 25%,transparent 25%),linear-gradient(-45deg,#2a2a30 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#2a2a30 75%),linear-gradient(-45deg,transparent 75%,#2a2a30 75%); background-size:16px 16px; background-position:0 0,0 8px,8px -8px,-8px 0; }
+  img,svg{ display:block; }
+  .mk{ display:flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+  <h1>SYNK — Brand kit</h1>
+  <p class="sub">Logo, icône et pack d'app, dérivés d'un seul master vectoriel.</p>
+
+  <h2>Master vectoriel — le mark (recolorable via <code>currentColor</code>)</h2>
+  <div class="row">
+    <div class="item"><div class="tile mk" style="width:120px;height:120px;background:var(--violet);color:#fff"><div id="mw" style="width:84px;height:84px"></div></div><div class="cap">blanc / violet</div></div>
+    <div class="item"><div class="tile mk" style="width:120px;height:120px;background:#0a0a0a;color:var(--violet)"><div id="mv" style="width:84px;height:84px"></div></div><div class="cap">violet / sombre</div></div>
+    <div class="item"><div class="tile mk" style="width:120px;height:120px;background:#f4f3ee;color:#161616"><div id="md" style="width:84px;height:84px"></div></div><div class="cap">sombre / clair</div></div>
+    <div class="item"><div class="tile mk checker" style="width:120px;height:120px;color:#fff"><div id="mt" style="width:84px;height:84px"></div></div><div class="cap">transparent</div></div>
+    <div class="item"><div class="mk" style="height:120px;gap:16px;display:flex;align-items:center;color:#fff"><div id="s1" style="width:24px;height:24px"></div><div id="s2" style="width:40px;height:40px"></div><div id="s3" style="width:64px;height:64px"></div></div><div class="cap">net à 24 / 40 / 64px</div></div>
+  </div>
+
+  <h2>Icône d'app — dégradé (master <code>synk-icon.svg</code>)</h2>
+  <div class="row">
+    <div class="item"><div class="tile" style="width:140px;height:140px"><img src="src/logo/synk-icon.svg" width="140" height="140"></div><div class="cap">synk-icon.svg</div></div>
+    <div class="item"><div class="tile" style="width:100px;height:100px"><img src="src/logo/synk-icon.svg" width="100" height="100"></div><div class="cap">100px</div></div>
+    <div class="item"><div class="tile" style="width:64px;height:64px"><img src="src/logo/synk-icon.svg" width="64" height="64"></div><div class="cap">64px</div></div>
+    <div class="item"><div class="tile" style="width:40px;height:40px"><img src="src/logo/synk-icon.svg" width="40" height="40"></div><div class="cap">40px</div></div>
+  </div>
+
+  <h2>Variantes de tuile (PNG)</h2>
+  <div class="row">
+    <div class="item"><div class="tile" style="width:110px;height:110px"><img src="src/logo/synk-icon-violet.png" width="110"></div><div class="cap">violet</div></div>
+    <div class="item"><div class="tile" style="width:110px;height:110px"><img src="src/logo/synk-icon-violet-light.png" width="110"></div><div class="cap">violet clair</div></div>
+    <div class="item"><div class="tile" style="width:110px;height:110px"><img src="src/logo/synk-icon-grey.png" width="110"></div><div class="cap">gris</div></div>
+    <div class="item"><div class="tile" style="width:110px;height:110px"><img src="src/logo/synk-icon-black.png" width="110"></div><div class="cap">noir</div></div>
+    <div class="item"><div class="tile checker" style="width:110px;height:110px"><img src="src/logo/synk-mark-white.png" width="110"></div><div class="cap">mark transparent</div></div>
+  </div>
+
+  <h2>Pack d'icônes d'app (généré depuis le master)</h2>
+  <div class="row">
+    <div class="item"><div class="tile sq" style="width:120px;height:120px"><img src="src/logo/app-icons/ios-1024.png" width="120"></div><div class="cap">iOS 1024 · full-bleed</div></div>
+    <div class="item"><div class="tile sq" style="width:96px;height:96px"><img src="src/logo/app-icons/android-maskable-512.png" width="96"></div><div class="cap">Android maskable 512</div></div>
+    <div class="item"><div class="tile checker" style="width:96px;height:96px"><img src="src/logo/app-icons/android-foreground-432.png" width="96"></div><div class="cap">Android foreground</div></div>
+    <div class="item"><div class="tile" style="width:84px;height:84px"><img src="src/logo/app-icons/pwa-512.png" width="84"></div><div class="cap">PWA 512</div></div>
+    <div class="item"><div class="tile" style="width:60px;height:60px"><img src="src/logo/app-icons/pwa-192.png" width="60"></div><div class="cap">PWA 192</div></div>
+    <div class="item"><div class="tile" style="width:48px;height:48px"><img src="src/logo/app-icons/favicon-48.png" width="48"></div><div class="cap">favicon 48</div></div>
+    <div class="item"><div class="tile" style="width:32px;height:32px"><img src="src/logo/app-icons/favicon-32.png" width="32"></div><div class="cap">favicon 32</div></div>
+    <div class="item"><div class="tile" style="width:16px;height:16px"><img src="src/logo/app-icons/favicon-16.png" width="16"></div><div class="cap">16</div></div>
+  </div>
+
+<script>
+  fetch('src/logo/synk-mark.svg').then(r=>r.text()).then(svg=>{
+    ['mw','mv','md','mt','s1','s2','s3'].forEach(id=>{ const el=document.getElementById(id); el.innerHTML=svg; const s=el.querySelector('svg'); s.style.width='100%'; s.style.height='100%'; });
+  });
+</script>
+</body>
+</html>

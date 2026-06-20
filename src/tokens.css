@@ -1,0 +1,71 @@
+/* =============================================================================
+ * SYNK — design tokens as CSS custom properties.
+ * Import once at your app root:  import '@synk/brand/tokens.css';
+ * Then use:  color: var(--text-hi);  background: var(--surface-card);
+ * Source of truth: tokens/tokens.json (regenerate with `npm run build:tokens`).
+ * ========================================================================== */
+:root {
+  /* Brand */
+  --synk-violet: #6C63FF;
+  --synk-indigo: #8B5CF6;
+  --synk-eclipse: #0a0a0a;
+
+  /* Surfaces (lighter = higher elevation) */
+  --surface-canvas: #0a0a0a;
+  --surface-card: #171717;
+  --surface-raised: #1f1f1f;
+  --surface-overlay: #262626;
+  --surface-inset: #121212;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --text-hi: #ededed;
+  --text-mid: #a3a3a3;
+  --text-dim: rgba(255, 255, 255, 0.40);
+  --text-on-accent: #ffffff;
+
+  /* Accent states */
+  --accent: #6C63FF;
+  --accent-hover: #7d75ff;
+  --accent-press: #5b52e6;
+  --accent-ring: rgba(108, 99, 255, 0.45);
+  --accent-wash: rgba(108, 99, 255, 0.10);
+
+  /* Status */
+  --status-success: #10b981;
+  --status-warning: #fbbf24;
+  --status-danger: #ef4444;
+  --status-info: #60a5fa;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(90deg, #6C63FF 0%, #8B5CF6 100%);
+  --gradient-spotlight: linear-gradient(to bottom left, rgba(108,99,255,0.25), rgba(108,99,255,0.10), transparent);
+  --gradient-fog: linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.5) 45%, transparent 100%);
+
+  /* Type */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --weight-regular: 400; --weight-medium: 500; --weight-semibold: 600;
+  --weight-bold: 700; --weight-extrabold: 800; --weight-black: 900;
+
+  /* Spacing */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-16: 64px;
+
+  /* Radii */
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+  --radius-xl: 24px; --radius-2xl: 32px; --radius-pill: 100px; --radius-full: 9999px;
+
+  /* Shadows + glow */
+  --shadow-soft: 0px 4px 14px 0px rgba(0,0,0,0.25);
+  --shadow-deep: 0px 10px 25px -5px rgba(0,0,0,0.5);
+  --shadow-xl: 0px 25px 50px -12px rgba(0,0,0,0.7);
+  --shadow-glow: 0px 0px 15px rgba(108,99,255,0.4);
+
+  /* Motion */
+  --motion-fast: 150ms; --motion-base: 300ms; --motion-slow: 520ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

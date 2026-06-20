@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-label="SYNK">
+  <title>SYNK</title>
+  <defs>
+    <linearGradient id="bg" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6C63FF"></stop>
+      <stop offset="0.55" stop-color="#6052E4"></stop>
+      <stop offset="1" stop-color="#553AC5"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" rx="110" fill="url(#bg)"></rect>
+  <g fill="none" stroke="#ffffff" stroke-width="24">
+    <path d="M 207.00 229.84 A 84 84 0 1 1 168.79 280.53"></path>
+    <path d="M 301.14 264.64 A 84 84 0 1 1 330.37 222.42"></path>
+  </g>
+</svg>

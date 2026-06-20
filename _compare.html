@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+  body { margin:0; background:#15151a; color:#ededed; font-family:'Inter',system-ui,sans-serif; padding:40px; }
+  h1 { font-weight:800; font-size:22px; letter-spacing:-0.02em; margin:0 0 6px; }
+  p.sub { color:#a3a3a3; font-size:14px; margin:0 0 32px; }
+  .row { display:flex; gap:32px; flex-wrap:wrap; margin-bottom:32px; }
+  .cell { flex:none; }
+  .lbl { font:700 11px/1 'Inter',sans-serif; letter-spacing:0.14em; text-transform:uppercase; color:#8a8a93; margin:0 0 10px 2px; }
+  .frame { width:300px; height:300px; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; }
+  .frame img, .frame svg { width:300px; height:300px; display:block; }
+  .markwrap { width:300px; height:300px; display:flex; align-items:center; justify-content:center; }
+  .markwrap svg { width:300px; height:300px; }
+</style>
+</head>
+<body>
+  <h1>Logo original (PNG) vs master SVG recréé</h1>
+  <p class="sub">Recréation géométrique à ~1,9% d'écart. Le SVG est vectoriel (scalable) et recolorable.</p>
+
+  <div class="lbl">Icône d'app — tuile violette</div>
+  <div class="row">
+    <div class="cell">
+      <p class="lbl">Original PNG</p>
+      <div class="frame" style="background:#0a0a0a;"><img src="src/logo/synk-icon-violet.png" alt="original"></div>
+    </div>
+    <div class="cell">
+      <p class="lbl">SVG recréé (synk-icon.svg)</p>
+      <div class="frame" style="background:#0a0a0a;"><img src="src/logo/synk-icon.svg" alt="svg icon"></div>
+    </div>
+  </div>
+
+  <div class="lbl">Le mark seul (master, recolorable via currentColor)</div>
+  <div class="row">
+    <div class="cell">
+      <p class="lbl">Original transparent (PNG)</p>
+      <div class="frame" style="background:#6C63FF;"><img src="src/logo/synk-mark-white.png" alt="original mark"></div>
+    </div>
+    <div class="cell">
+      <p class="lbl">SVG — blanc sur violet</p>
+      <div class="frame" style="background:#6C63FF; color:#ffffff;"><div class="markwrap" id="m1"></div></div>
+    </div>
+    <div class="cell">
+      <p class="lbl">SVG — violet sur sombre</p>
+      <div class="frame" style="background:#0a0a0a; color:#6C63FF;"><div class="markwrap" id="m2"></div></div>
+    </div>
+    <div class="cell">
+      <p class="lbl">SVG — minuscule (32px, net)</p>
+      <div class="frame" style="background:#0a0a0a; color:#ededed; align-items:center; justify-content:center;">
+        <div style="display:flex; gap:18px; align-items:center;">
+          <div id="m3" style="width:32px;height:32px;"></div>
+          <div id="m4" style="width:64px;height:64px;"></div>
+          <div id="m5" style="width:120px;height:120px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // inline the master mark SVG into the currentColor demos so `currentColor` inherits
+  fetch('src/logo/synk-mark.svg').then(r=>r.text()).then(svg=>{
+    ['m1','m2','m3','m4','m5'].forEach(id=>{ document.getElementById(id).innerHTML = svg; });
+    document.querySelectorAll('#m3 svg,#m4 svg,#m5 svg').forEach(s=>{ s.style.width='100%'; s.style.height='100%'; });
+  });
+</script>
+</body>
+</html>
