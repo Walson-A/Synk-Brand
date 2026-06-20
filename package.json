@@ -1,6 +1,6 @@
 {
   "name": "@synk/brand",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SYNK brand assets — logo, animated logo component, and design tokens. Single source of truth shared by the website and the app.",
   "license": "UNLICENSED",
   "private": false,
@@ -11,7 +11,10 @@
   "exports": {
     ".": "./src/index.js",
     "./animation": "./src/animation/SynkLogoAnim.jsx",
-    "./tokens": "./src/tokens.js",
+    "./tokens": {
+      "types": "./src/tokens.d.ts",
+      "default": "./src/tokens.js"
+    },
     "./tokens.css": "./src/tokens.css",
     "./logo/*": "./src/logo/*"
   },

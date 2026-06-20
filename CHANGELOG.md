@@ -3,6 +3,13 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [0.3.0] — 2026-06-20
+### Ajouté
+- **Types TypeScript** pour `@synk/brand/tokens` (`src/tokens.d.ts` + condition
+  `types` dans `exports`) → le package se consomme sans erreur depuis un projet
+  TS strict (l'app Expo, le site). Avant, l'import levait un TS7016
+  (« pas de fichier de déclaration »).
+
 ## [0.2.0] — 2026-06-20
 ### Corrigé
 - **Parité de la source de vérité** : `tokens/tokens.json` était incomplet face à
