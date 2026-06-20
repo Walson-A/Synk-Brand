@@ -3,6 +3,22 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [0.4.0] — 2026-06-20
+### Ajouté
+- **`SynkLogoAnim.native.jsx`** : port React Native du splash (react-native-svg +
+  reanimated + expo-linear-gradient ; props portables, zéro filtre CSS). Exporté
+  via la condition `react-native` de `@synk/brand/animation` + le sous-chemin
+  explicite `@synk/brand/animation/native`. Types fournis (`SynkLogoAnim.native.d.ts`).
+- Prop **`glow`** (`string` rgb | `false`) sur `SynkLogoAnim` : éteint le halo radial
+  quand le fond fournit déjà un glow (ex. `PremiumBackground` de l'app) → pas de doublon.
+- **Frames splash statiques** par résolution (`src/logo/splash/`) pour caler l'image du
+  splash natif sur la frame finale du mark. App-icons régénérés (store-ready).
+- **`ADOPTION.md`** : guide d'adoption (app & site).
+
+### Corrigé
+- `exports` expose désormais **`./package.json`** (évite `ERR_PACKAGE_PATH_NOT_EXPORTED`
+  pour les outils qui le lisent par sous-chemin).
+
 ## [0.3.0] — 2026-06-20
 ### Ajouté
 - **Types TypeScript** pour `@synk/brand/tokens` (`src/tokens.d.ts` + condition
