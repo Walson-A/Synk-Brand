@@ -6,13 +6,13 @@ Ce fichier contient les instructions pour faire consommer ce package par `Synk-A
 ## Installation
 Repo **public** → install depuis GitHub, version épinglée (jamais `main`) :
 ```bash
-npm install github:Walson-A/Synk-Brand#v0.4.0
+npm install github:Walson-A/Synk-Brand#v0.5.0
 ```
 Imports : `@synk/brand/tokens` (JS, typé) · `@synk/brand/tokens.css` · `@synk/brand` (composant web)
 · **`@synk/brand/animation/native`** (RN : `SynkLogoAnim` + `SynkSplash`, typés) · `@synk/brand/logo/*`.
 
-> État : `Synk-App` consomme déjà les tokens (`constants/Colors.ts` re-pointé). Reste l'intégration
-> du splash animé (ci-dessous) et, plus tard, la migration du site.
+> État : `Synk-App` consomme les tokens (`constants/Colors.ts`) **et** le splash animé
+> (`SynkLogoAnim.native` rendu dans `app/_layout.tsx`). Reste, plus tard, la migration du site.
 
 ---
 
@@ -22,7 +22,7 @@ CONTEXTE : repo Synk-App (Expo/RN/TS). Le package @synk/brand est la source uniq
 marque. Objectif : intégrer le splash animé + finir de retirer les valeurs de marque en
 dur, SANS changer le rendu.
 
-0. npm install github:Walson-A/Synk-Brand#v0.4.0. expo install react-native-svg
+0. npm install github:Walson-A/Synk-Brand#v0.5.0. expo install react-native-svg
    react-native-reanimated expo-linear-gradient @expo-google-fonts/inter.
 1. POLICE : charger Inter 900 + 700 dans le useFonts de app/_layout.tsx
    (Inter_900Black, Inter_700Bold) — sinon le wordmark du splash tombe sur la police système.
@@ -42,7 +42,7 @@ LIVRABLE : PR sur branche chore/adopt-synk-brand-splash. Ne pas pousser sur main
 CONTEXTE : repo Synk-Website (Next.js/TS). @synk/brand = source unique de marque.
 Refacto iso-rendu. Respecter la distinction marketing (DA premium) vs admin (dense).
 
-0. npm install github:Walson-A/Synk-Brand#v0.4.0 ; next.config.js : transpilePackages:
+0. npm install github:Walson-A/Synk-Brand#v0.5.0 ; next.config.js : transpilePackages:
    ['@synk/brand'] ; importer @synk/brand/tokens.css une fois dans app/layout.tsx.
 1. AUDIT (rapport d'abord) : src/app/globals.css (@theme), hex de marque en dur dans
    src/components/ui/ et pages, logos locaux (favicon, OG, PWA), chargement Inter. Comparer aux
@@ -60,7 +60,7 @@ Ne pas pousser sur main.
 ---
 
 ## Bonnes pratiques (éviter la dette)
-- **Semver + épinglage** : les consommateurs pointent une version (`#v0.4.0`), jamais `main`.
+- **Semver + épinglage** : les consommateurs pointent une version (`#v0.5.0`), jamais `main`.
 - **API publique = `src/index.js`** + les sous-chemins `exports` → refacto interne libre.
 - **Tokens = source unique** (`tokens/tokens.json` → `npm run build:tokens`).
 - **Web vs RN séparés** : tokens/logos cross-plateforme ; animation web (`SynkLogoAnim.jsx`)

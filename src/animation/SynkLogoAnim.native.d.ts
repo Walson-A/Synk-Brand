@@ -13,13 +13,18 @@ export interface SynkLogoAnimProps {
   tagText?: string;
   wordColor?: string;
   tagColor?: string;
-  /** called once the mark finishes drawing. */
+  /** called once the full animation (draw → snap → wordmark → tagline) finishes. */
   onFinish?: () => void;
 }
 
 /** The animated SYNK mark (+ optional wordmark / tagline). Render it inside your
  *  own full-screen overlay. */
 export const SynkLogoAnim: ComponentType<SynkLogoAnimProps>;
+
+/** Total animation duration in ms (genesis → draw → snap → wordmark → tagline).
+ *  Use as the splash overlay's minimum display time so the animation always plays
+ *  through, even when the app becomes ready sooner. */
+export const SYNK_SPLASH_DURATION: number;
 
 export interface SynkSplashProps {
   /** when true, the overlay fades out and calls onFinish. */

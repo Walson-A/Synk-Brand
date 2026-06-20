@@ -3,6 +3,19 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [0.5.0] — 2026-06-20
+### Changé
+- **`SynkLogoAnim.native`** refondu pour coller à l'animation web de marque : lueur
+  de genèse → tracé des anneaux → **snap** (rebond d'échelle + flash + éclat blanc
+  « sheen ») → **« SYNK » révélé lettre par lettre** (stagger 90 ms) → tagline. Glow
+  simplifié en un **halo radial doux** (plus de cœur blanc, zéro filtre → rendu
+  identique iOS/Android). Pace ~3,2 s. Tagline éclaircie (`#c8ccd8`) pour la lisibilité.
+
+### Ajouté
+- Export **`SYNK_SPLASH_DURATION`** (ms) : durée totale de l'anim, à utiliser comme
+  durée minimale d'affichage de l'overlay (garder le splash tant que l'anim n'a pas
+  joué en entier, même si l'app est prête plus tôt).
+
 ## [0.4.0] — 2026-06-20
 ### Ajouté
 - **`SynkLogoAnim.native.jsx`** : port React Native du splash (react-native-svg +

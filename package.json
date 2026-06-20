@@ -1,6 +1,6 @@
 {
   "name": "@synk/brand",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "SYNK brand assets — logo, animated logo component, and design tokens. Single source of truth shared by the website and the app.",
   "license": "UNLICENSED",
   "private": false,
