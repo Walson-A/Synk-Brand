@@ -3,6 +3,20 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [0.5.1] — 2026-06-21
+### Changé
+- **Logos couleur régénérés en 2048px** (depuis le master, RGBA, bords nets) :
+  `synk-icon-violet`, `synk-icon-grey`, `synk-icon-black`, `synk-mark-white` +
+  `synk-icon-512` (export). Avant : 500px. Dégradés fidèles à l'icône iOS.
+- `logo-data.js` (données du composant web `SynkLogoAnim`) régénéré en 2048px.
+
+### Ajouté
+- **`synk-icon-studio.png`** : variante STUDIOS (accent `#A855F7`), tuile dégradé
+  `#B57BFF → #A855F7 → #8B3FD9` + highlight radial. Différencie studios vs artistes.
+
+### Supprimé
+- `synk-icon-violet-light.png` : variante non fondée, remplacée par `synk-icon-studio`.
+
 ## [0.5.0] — 2026-06-20
 ### Changé
 - **`SynkLogoAnim.native`** refondu pour coller à l'animation web de marque : lueur
