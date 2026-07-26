@@ -3,6 +3,14 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [0.6.1] — 2026-07-26
+### Corrigé
+- **`palette.md` et `direction.md` sont désormais publiés** avec le paquet. Ils étaient absents :
+  `files` ne listait pas `design/`. Or `ADOPTION.md` demande de les lire — un agent qui n'a que le
+  paquet installé n'avait pas son brief. Seuls ces deux fichiers sont embarqués, pas le reste de
+  `design/` (polices, icônes et pages de validation, ~365 Ko, sans intérêt pour un consommateur).
+  Détecté en installant réellement le tag `v0.6.0` dans un projet vierge.
+
 ## [0.6.0] — 2026-07-26
 
 Chantier **C11 — direction artistique COLAB**. Le package devient multi-marque.

@@ -70,7 +70,7 @@ n'ont **aucune décision visuelle à prendre** : ils consomment le package.
 états d'interaction, sémantique, logo). Ils expliquent aussi **pourquoi** — utile quand une
 contrainte réelle obligera à s'en écarter.
 
-> Version à épingler : **`v0.6.0`** (taguée le 2026-07-26). Comme pour SYNK, on épingle un tag,
+> Version à épingler : **`v0.6.1`** (taguée le 2026-07-26). Comme pour SYNK, on épingle un tag,
 > jamais `main`.
 
 ### Les règles communes aux trois
@@ -129,7 +129,7 @@ launch-plan COLAB (Colab-API/docs/launch-plan.md §10). La DA est FIGÉE — tu 
 aucune décision visuelle, tu consommes @synk/brand/colab.
 
 0. Lire Synk-Brand/design/colab/palette.md et direction.md. Puis :
-   npm i github:Walson-A/Synk-Brand#v0.6.0
+   npm i github:Walson-A/Synk-Brand#v0.6.1
    import '@synk/brand/colab/tokens.css'; import '@synk/brand/colab/components.css';
    Self-hoster IBMPlexSans.woff2 (variable, font-weight: 100 900). Pas de CDN.
 1. Poser .colab-root en racine + la bascule de thème (data-colab-theme), clair par défaut,
@@ -152,7 +152,7 @@ CONTEXTE : repo Synk-App (Expo/RN/TS). Chantier C8. Les écrans COLAB portent l'
 COLAB (D15) : on doit comprendre qu'on utilise COLAB, pas SYNK. La DA est FIGÉE.
 
 0. Lire Synk-Brand/design/colab/palette.md et direction.md.
-   npm i github:Walson-A/Synk-Brand#v0.6.0
+   npm i github:Walson-A/Synk-Brand#v0.6.1
    expo install @expo-google-fonts/ibm-plex-sans @tabler/icons-react-native
    import { theme, radius, font } from '@synk/brand/colab/tokens';
 1. ⚠️ NE PAS réutiliser les tokens SYNK dans la section COLAB, et surtout pas le violet
