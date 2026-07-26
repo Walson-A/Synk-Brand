@@ -70,8 +70,8 @@ n'ont **aucune décision visuelle à prendre** : ils consomment le package.
 états d'interaction, sémantique, logo). Ils expliquent aussi **pourquoi** — utile quand une
 contrainte réelle obligera à s'en écarter.
 
-> ⚠️ **Prérequis owner** : pousser la branche `feat/colab-design-system` et taguer **`v0.6.0`**.
-> Tant que ce n'est pas fait, épingler un SHA de la branche plutôt que `main`.
+> Version à épingler : **`v0.6.0`** (taguée le 2026-07-26). Comme pour SYNK, on épingle un tag,
+> jamais `main`.
 
 ### Les règles communes aux trois
 

@@ -3,13 +3,18 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
-## [Non publié]
+## [0.6.0] — 2026-07-26
 
 Chantier **C11 — direction artistique COLAB**. Le package devient multi-marque.
 **Purement additif : aucun fichier SYNK modifié**, et les consommateurs épinglent un tag
 (`#v0.5.0` / `#v0.5.1`) — rien ne bouge chez eux tant qu'ils ne le décident pas.
 
 ### Ajouté
+- **Logo COLAB** : `src/logo/colab/colab-mark-white.png` (anneaux blancs sur transparent, extraits
+  du PNG owner) + `colab-icon-source.png` (la référence, intacte). ⚠️ Le fond du source est
+  `#303A62` alors que la couleur de marque est `#1B395A` : c'est la tuile `.colab-tile` qui apporte
+  la couleur. Master vectoriel encore à produire.
+- **`ADOPTION.md`** : huit règles communes + un prompt de démarrage par chantier front (C8, C9, C10).
 - **Marque COLAB.** Source `tokens/colab.json` (DTCG), en deux couches : `ramp` (primitives,
   une seule teinte 211° en deux saturations) → `light`/`dark` (les rôles, qui aliasent la rampe).
   Changer un étage re-teinte tout ce qui l'alias ; changer un rôle ne bouge que lui.
