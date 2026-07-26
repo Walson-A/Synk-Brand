@@ -210,11 +210,29 @@ lu           --txt          non lu   --wave
 Pas de dégradé, pas d'animation de pulsation : la tête de lecture est la frontière entre les deux
 couleurs, rien d'autre.
 
+## Logo
+
+Deux fichiers dans `src/logo/colab/`, consommables via `@synk/brand/logo/colab/*` :
+
+| Fichier | Usage |
+|---|---|
+| `colab-mark-white.png` | **Le fichier à utiliser.** Anneaux blancs, fond transparent, 500×500. Se pose sur une tuile `--colab-brand` (classe `.colab-tile`). |
+| `colab-icon-source.png` | La référence owner, intacte. Ne pas l'utiliser en interface. |
+
+⚠️ **Pourquoi le fichier source n'est pas utilisé directement.** Son fond est `#303A62`, alors que
+la couleur de marque figée est `#1B395A`. Le poser tel quel mettrait **deux bleus différents** dans
+l'interface. Le mark blanc a donc été extrait par inversion du compositing — `t = (pixel − fond) /
+(blanc − fond)` par canal, ce qui préserve l'antialiasing des anneaux au lieu de le seuiller — et
+c'est la tuile qui apporte la couleur, prise dans les tokens.
+
+Vérifié : lisible jusqu'à 48 px ; à 24 px la forme tient mais l'entrelacement se perd.
+
+**Reste à faire (owner)** : le master vectoriel, via claude.ai/design. Un SVG recolorable
+remplacera le PNG sans rien changer d'autre — seul le fichier bouge, `.colab-tile` et les tokens
+sont déjà en place. Manquent aussi les déclinaisons : favicon, app-icons, version pour fond clair.
+
 ## Reste à faire
 
-- Le master du logo, à refaire proprement en fin de chantier (claude.ai/design, par l'owner).
-  Référence actuelle : `Colab-Platform/colab.PNG`. Le placeholder géométrique des maquettes n'est pas
-  un livrable.
 - La densité de l'inbox studio (voir plus haut) — à trancher sur la maquette de l'app studio.
 
 ## Outillage

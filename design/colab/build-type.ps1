@@ -45,12 +45,21 @@ foreach ($file in $families.Keys) {
   [void]$rules.AppendLine("  }")
 }
 
-$html = [System.IO.File]::ReadAllText($src)
-$marker = '/* @FONTFACES'
-if ($html -notmatch [regex]::Escape($marker)) { throw "marqueur $marker absent de $src" }
+# Le mark COLAB, blanc sur transparent — le vrai logo owner, pas un placeholder.
+$markPath = Join-Path (Split-Path -Parent $here) '..\src\logo\colab\colab-mark-white.png'
+$markPath = [System.IO.Path]::GetFullPath($markPath)
+if (-not (Test-Path $markPath)) { throw "mark manquant : $markPath" }
+$markB64 = [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($markPath))
+$logoJs = "  const LOGO_MARK = 'data:image/png;base64,$markB64';"
 
-# remplace la ligne complète du marqueur (commentaire sur une ligne)
+$html = [System.IO.File]::ReadAllText($src)
+foreach ($m in @('/* @FONTFACES', '/* @LOGO')) {
+  if ($html -notmatch [regex]::Escape($m)) { throw "marqueur $m absent de $src" }
+}
+
+# remplace la ligne complète de chaque marqueur (commentaires sur une ligne)
 $html = [regex]::Replace($html, '/\* @FONTFACES[^\r\n]*\*/', $rules.ToString().TrimEnd())
+$html = [regex]::Replace($html, '/\* @LOGO[^\r\n]*\*/', $logoJs)
 [System.IO.File]::WriteAllText($dst, $html, [System.Text.UTF8Encoding]::new($false))
 
 "{0} polices embarquees" -f $families.Count

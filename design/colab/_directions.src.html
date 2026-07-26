@@ -128,7 +128,7 @@
   .rail { background: var(--rail); border-right: 1px solid var(--bord); padding: var(--pad-pane); display: flex; flex-direction: column; gap: var(--gap-row); overflow: hidden; }
   .brandrow { display: flex; align-items: center; gap: 9px; padding-bottom: 12px; }
   .tile { width: 28px; height: 28px; border-radius: var(--r-sm); background: var(--brand); display: grid; place-items: center; flex: none; }
-  .tile svg { width: 19px; height: 19px; color: #fff; display: block; }
+  .tile img { width: 21px; height: 21px; display: block; }
   .wordmark { font-size: var(--fs-title); font-weight: 700; letter-spacing: .04em; }
   .search { padding: var(--pad-row); border-radius: var(--r-sm); background: var(--chip); color: var(--mut); font-size: var(--fs-sm); margin-bottom: 11px; }
   .railhead { display: flex; align-items: center; justify-content: space-between; padding: 0 6px 7px; }
@@ -240,6 +240,8 @@
 </div>
 
 <script>
+/* @LOGO — remplacé par build-type.ps1 */
+
 (() => {
   "use strict";
 
@@ -271,15 +273,9 @@
   const state = { font: "Geist", mode: "light", density: "compact", radius: "crisp", caps: "off" };
   const stage = document.getElementById("stage");
 
-  /* ---------- le mark, placeholder géométrique (master refait en fin de chantier) ---------- */
-  const MARK = `<svg viewBox="0 0 100 100" aria-hidden="true">
-    <defs>
-      <mask id="mk-l"><rect width="100" height="100" fill="#fff"/><circle cx="50" cy="66" r="7.5" fill="#000"/></mask>
-      <mask id="mk-r"><rect width="100" height="100" fill="#fff"/><circle cx="50" cy="34" r="7.5" fill="#000"/></mask>
-    </defs>
-    <circle cx="38" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="8.5" mask="url(#mk-l)"/>
-    <circle cx="62" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="8.5" mask="url(#mk-r)"/>
-  </svg>`;
+  /* Le vrai mark COLAB (blanc sur transparent, extrait du PNG owner), injecté en
+     data URI par build-type.ps1. Master vectoriel à refaire plus tard. */
+  const MARK = `<img src="${LOGO_MARK}" alt="" />`;
   const PLAY = `<svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0v12l10-6z" fill="currentColor"/></svg>`;
 
   const PROJECTS = [
