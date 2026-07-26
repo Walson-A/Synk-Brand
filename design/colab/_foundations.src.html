@@ -1,0 +1,458 @@
+<title>COLAB — porte 3 : icônes, élévation, états</title>
+
+<style>
+/* @FONT — remplacé par build-foundations.ps1 */
+
+  :root {
+    --ink: #12161c; --ink-2: #4a5462; --ink-3: #79838f;
+    --page: #fcfcfd; --panel: #ffffff;
+    --line: rgba(18,22,28,0.12); --line-soft: rgba(18,22,28,0.06);
+    --mark: #b45309; --ok: #0f7a4d;
+    --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+    --ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e7eaef; --ink-2: #9aa5b3; --ink-3: #6b7683;
+      --page: #0d1015; --panel: #14181f;
+      --line: rgba(231,234,239,0.14); --line-soft: rgba(231,234,239,0.07);
+      --mark: #e0a458; --ok: #4ec08a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #e7eaef; --ink-2: #9aa5b3; --ink-3: #6b7683;
+    --page: #0d1015; --panel: #14181f;
+    --line: rgba(231,234,239,0.14); --line-soft: rgba(231,234,239,0.07);
+    --mark: #e0a458; --ok: #4ec08a;
+  }
+  :root[data-theme="light"] {
+    --ink: #12161c; --ink-2: #4a5462; --ink-3: #79838f;
+    --page: #fcfcfd; --panel: #ffffff;
+    --line: rgba(18,22,28,0.12); --line-soft: rgba(18,22,28,0.06);
+    --mark: #b45309; --ok: #0f7a4d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: var(--ui); font-size: 15px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 36px 24px 96px; }
+
+  .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  h1 { margin: 8px 0 10px; font-size: clamp(26px,3.4vw,38px); line-height: 1.08; letter-spacing: -.025em; font-weight: 680; text-wrap: balance; }
+  .lede { margin: 0; max-width: 74ch; color: var(--ink-2); font-size: 16px; }
+  h2 { margin: 0 0 3px; font-size: 20px; letter-spacing: -.018em; font-weight: 660; }
+  h3 { margin: 26px 0 10px; font-size: 12px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+  .note { margin: 0 0 18px; max-width: 80ch; color: var(--ink-2); font-size: 14px; }
+  .kbd { font-family: var(--mono); font-size: .87em; background: var(--line-soft); padding: 1px 5px; border-radius: 4px; }
+  section.part { margin-top: 58px; padding-top: 28px; border-top: 1px solid var(--line); }
+
+  .callout {
+    border-left: 3px solid var(--mark); background: color-mix(in srgb, var(--mark) 7%, transparent);
+    padding: 13px 16px; border-radius: 0 8px 8px 0; font-size: 13.5px; color: var(--ink-2); max-width: 82ch;
+  }
+  .callout strong { color: var(--ink); }
+  .callout.reco { border-left-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, transparent); }
+
+  /* contrôles */
+  .controls {
+    position: sticky; top: 0; z-index: 20; margin: 24px 0 8px;
+    background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(12px);
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    display: flex; flex-wrap: wrap; gap: 14px 26px;
+  }
+  .cgroup { display: flex; flex-direction: column; gap: 6px; }
+  .clabel { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--ink-3); }
+  .cbtns { display: flex; flex-wrap: wrap; gap: 5px; }
+  .cbtn {
+    font: inherit; font-size: 12.5px; font-weight: 550; color: var(--ink-2);
+    background: transparent; border: 1px solid var(--line); border-radius: 7px;
+    padding: 5px 11px; cursor: pointer; transition: background .12s, color .12s;
+  }
+  .cbtn:hover { background: var(--line-soft); color: var(--ink); }
+  .cbtn:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+  .cbtn[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .cbtn { transition: none; } }
+
+  .pill { font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-3); }
+  .pill-reco { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); background: color-mix(in srgb, var(--ok) 11%, transparent); }
+
+  /* ================= la scène : palette + direction figées ================= */
+  .co {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    --r-sm: 8px; --r-md: 11px; --r-lg: 14px;
+    --fs-body: 14.5px; --fs-sm: 12.5px; --fs-lab: 11px; --fs-title: 15px;
+    --av: 27px;
+    font-size: var(--fs-body);
+  }
+  .co[data-mode="light"] {
+    --canvas: #ffffff; --rail: #f3f7fc; --surf: #f3f7fc; --chip: #e3edf7;
+    --bord: #c6d8eb; --txt: #091420; --mut: #527294; --wave: #9db9d7;
+    --act: #1B395A; --acton: #ffffff; --brand: #1B395A;
+    --hov: #eef4fb; --sel: #e3edf7; --selhov: #d7e6f4; --ring: #1B395A;
+    --shadow: 0 1px 2px rgba(9,20,32,.05), 0 4px 12px -4px rgba(9,20,32,.10);
+  }
+  .co[data-mode="dark"] {
+    --canvas: #090d10; --rail: #05080a; --surf: #293a4c; --chip: #304254;
+    --bord: #2f3d4c; --txt: #f5f7fa; --mut: #aabaca; --wave: #527294;
+    --act: #ffffff; --acton: #0e141b; --brand: #1B395A;
+    --hov: #141c25; --sel: #293a4c; --selhov: #32465a; --ring: #f5f7fa;
+    --shadow: 0 1px 2px rgba(0,0,0,.5), 0 6px 16px -6px rgba(0,0,0,.7);
+  }
+  .board { background: var(--canvas); color: var(--txt); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .lab { font-size: var(--fs-lab); text-transform: uppercase; letter-spacing: .13em; font-weight: 700; color: var(--mut); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .ico { display: inline-grid; place-items: center; flex: none; }
+  .ico svg { width: 100%; height: 100%; display: block; }
+  .co[data-fill="stroke"] .ico svg { stroke-width: var(--sw); }
+
+  /* --- 1. icônes --- */
+  .setrow { display: flex; align-items: center; gap: 14px; padding: 11px 13px; border-radius: var(--r-md); }
+  .setrow[data-on="1"] { background: var(--sel); }
+  .setname { width: 92px; flex: none; font-size: var(--fs-sm); font-weight: 700; }
+  .setglyphs { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; }
+  .setglyphs .ico { width: 21px; height: 21px; color: var(--txt); }
+
+  /* --- fragments in-situ --- */
+  .fcard { display: flex; align-items: center; gap: 11px; padding: 10px 14px; border-radius: var(--r-md); background: var(--surf); border: 1px solid var(--bord); }
+  .play { width: 31px; height: 31px; border-radius: 999px; background: var(--act); color: var(--acton); display: grid; place-items: center; flex: none; }
+  .play .ico { width: 14px; height: 14px; }
+  .fmeta { flex: 1; min-width: 0; }
+  .fname { display: flex; align-items: center; gap: 7px; font-size: var(--fs-sm); font-weight: 650; }
+  .vchip { font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 5px; background: var(--chip); color: var(--mut); letter-spacing: .06em; }
+  .fsub { font-size: var(--fs-lab); color: var(--mut); }
+  .wave { display: flex; align-items: center; gap: 2px; height: 26px; width: 108px; flex: none; }
+  .wave i { flex: 1; border-radius: 1px; background: var(--wave); }
+  .wave i[data-on="1"] { background: var(--txt); }
+  .iconbtn { width: 30px; height: 30px; border-radius: var(--r-sm); border: 1px solid var(--bord); display: grid; place-items: center; color: var(--mut); flex: none; }
+  .iconbtn .ico { width: 16px; height: 16px; }
+  .bar { display: flex; align-items: center; gap: 8px; }
+  .inp { flex: 1; padding: 9px 14px; border-radius: var(--r-sm); background: var(--surf); border: 1px solid var(--bord); color: var(--mut); font-size: var(--fs-sm); }
+  .btn { font-family: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: 9px 15px; border-radius: var(--r-sm); border: 1px solid transparent; cursor: default; display: inline-flex; align-items: center; gap: 7px; }
+  .btn .ico { width: 14px; height: 14px; }
+  .btn-primary { background: var(--act); color: var(--acton); }
+  .btn-ghost { background: transparent; color: var(--txt); border-color: var(--bord); }
+
+  /* --- 2. élévation --- */
+  .elev-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .elev { padding: 14px; border-radius: var(--r-md); }
+  .elev-a { border: 1px solid var(--bord); }
+  .elev-b { background: var(--surf); }
+  .elev-c { background: var(--surf); box-shadow: var(--shadow); }
+  .elev-d { background: var(--surf); border: 1px solid var(--bord); }
+  .elev-t { font-size: var(--fs-sm); font-weight: 650; }
+  .elev-s { font-size: var(--fs-lab); color: var(--mut); margin-top: 2px; }
+
+  /* --- 3. états --- */
+  .states { display: grid; gap: 8px; }
+  .strow { display: grid; grid-template-columns: 158px minmax(0,1fr) auto; gap: 12px; align-items: center; }
+  .stname { font-size: var(--fs-lab); color: var(--mut); text-transform: uppercase; letter-spacing: .09em; font-weight: 700; }
+  .sthex { font-family: var(--mono); font-size: 10.5px; color: var(--mut); }
+  .prow { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--r-sm); position: relative; }
+  .prow .pav { width: var(--av); height: var(--av); border-radius: var(--r-sm); display: grid; place-items: center; flex: none; font-size: var(--fs-lab); font-weight: 700; background: var(--chip); color: var(--mut); }
+  .ptxt { flex: 1; min-width: 0; }
+  .pname { font-size: var(--fs-sm); font-weight: 600; display: block; }
+  .psub { font-size: var(--fs-lab); color: var(--mut); display: block; }
+  .pbadge { min-width: 19px; height: 19px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center; font-size: var(--fs-lab); font-weight: 800; background: var(--act); color: var(--acton); flex: none; }
+  .prow[data-strat="bar"][data-sel="1"]::before {
+    content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 62%; border-radius: 0 3px 3px 0; background: var(--txt);
+  }
+  .prow[data-strat="weight"][data-sel="1"] .pname { font-weight: 800; }
+  .prow[data-focus="1"] { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .prow[data-off="1"] { opacity: .42; }
+
+  /* --- 4. sémantique --- */
+  .sem-grid { display: grid; gap: 12px; }
+  .sem { display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px; border-radius: var(--r-md); background: var(--surf); border: 1px solid var(--bord); }
+  .sem .ico { width: 18px; height: 18px; margin-top: 1px; }
+  .sem-t { font-size: var(--fs-sm); font-weight: 650; }
+  .sem-s { font-size: var(--fs-lab); color: var(--mut); margin-top: 2px; }
+  .sem-b { display: flex; align-items: flex-start; gap: 11px; padding: 12px 14px; border-radius: var(--r-md); }
+  .cols { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .col-h { font-size: var(--fs-lab); text-transform: uppercase; letter-spacing: .11em; font-weight: 700; color: var(--mut); margin-bottom: 9px; }
+
+  .duo { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(370px, 1fr)); }
+  .duo-l { font-size: 10.5px; letter-spacing: .11em; text-transform: uppercase; font-weight: 700; color: var(--ink-3); margin-bottom: 7px; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">COLAB · chantier C11 · porte 3</div>
+  <h1>Icônes, élévation, états</h1>
+  <p class="lede">
+    Les quatre choix qui construisent <em>tous</em> les composants. Couleur et typographie ne bougent
+    plus — <span class="kbd">palette.md</span> et <span class="kbd">direction.md</span> sont figés. Tout
+    est en IBM Plex Sans, rayons doux, capitales espacées.
+  </p>
+
+  <div class="controls" id="controls"></div>
+
+  <!-- ================= 1. ICÔNES ================= -->
+  <section class="part">
+    <h2>1 · Le jeu d'icônes</h2>
+    <p class="note">
+      Quatre jeux libres, les <strong>mêmes vingt icônes</strong>, réellement téléchargées — pas de
+      dessin à la main. Les quatre ont un paquet React Native, donc aucun ne bloque l'app studio.
+      L'épaisseur de trait est réglable en haut : c'est elle qui doit s'accorder à IBM Plex.
+    </p>
+    <div class="board co" id="iconBoard"></div>
+
+    <h3>Les mêmes icônes en situation</h3>
+    <div class="duo co" id="iconSitu"></div>
+  </section>
+
+  <!-- ================= 2. ÉLÉVATION ================= -->
+  <section class="part">
+    <h2>2 · Comment une carte se détache</h2>
+    <p class="note">
+      Je mélangeais les trois procédés depuis le début sans l'avoir décidé, et ça se voyait. Quatre
+      façons de définir une surface, à choisir une fois pour toutes.
+    </p>
+    <div class="duo co" id="elev"></div>
+    <div class="callout reco" style="margin-top:16px">
+      <strong>Ma recommandation : le filet + le fond (D), sans ombre.</strong> En mode sombre, une
+      ombre sur un fond quasi noir ne se voit pas — elle ne sert donc qu'en clair, et un procédé qui ne
+      marche que dans un mode n'est pas un procédé. Le filet, lui, fonctionne dans les deux et reste
+      cohérent avec le registre « outil de travail » de la référence Notion.
+    </div>
+  </section>
+
+  <!-- ================= 3. ÉTATS ================= -->
+  <section class="part">
+    <h2>3 · Les états d'interaction</h2>
+    <p class="note">
+      Le vrai problème créé par le monochrome : sans couleur d'accent, <strong>seule la clarté</strong>
+      exprime le survol et la sélection. Trois stratégies, six états chacune. Les valeurs affichées sont
+      celles réellement appliquées.
+    </p>
+    <div class="duo co" id="states"></div>
+    <div class="callout reco" style="margin-top:16px">
+      <strong>Ma recommandation : clarté + barre latérale (stratégie 2).</strong> Les écarts de
+      luminance réellement mesurés, et ils sont contre-intuitifs :
+      <table style="border-collapse:collapse;margin:10px 0;font-size:12.5px">
+        <tr><td style="padding:2px 14px 2px 0"></td><td style="padding:2px 14px 2px 0;font-weight:700">clair</td><td style="font-weight:700">sombre</td></tr>
+        <tr><td style="padding:2px 14px 2px 0">survol vs fond</td><td class="num" style="padding:2px 14px 2px 0">1,107</td><td class="num">1,136</td></tr>
+        <tr><td style="padding:2px 14px 2px 0">sélection vs fond</td><td class="num" style="padding:2px 14px 2px 0">1,185</td><td class="num"><strong>1,675</strong></td></tr>
+        <tr><td style="padding:2px 14px 2px 0">sélection + survol vs sélection</td><td class="num" style="padding:2px 14px 2px 0"><strong>1,073</strong></td><td class="num">1,197</td></tr>
+      </table>
+      C'est le <strong>mode clair</strong> qui étouffe, pas le sombre : sous du blanc pur il n'y a
+      presque pas de place avant que les surfaces virent au gris, alors que
+      <span class="kbd">#293a4c</span> sur <span class="kbd">#090d10</span> est un grand saut.
+      À 1,073 on est sous le seuil perceptible — le survol d'une ligne déjà sélectionnée ne se voit
+      littéralement pas en clair.
+      <br><br>
+      La barre ajoute un signal de <em>forme</em>, pas de couleur : elle reste monochrome, se lit
+      instantanément et ne dépend pas d'un écart de luminance minuscule. La graisse (stratégie 3)
+      est écartée pour une autre raison — elle entre en conflit avec le gras des non-lus, qui code
+      déjà autre chose.
+    </div>
+  </section>
+
+  <!-- ================= 4. SÉMANTIQUE ================= -->
+  <section class="part">
+    <h2>4 · Combien de couleur laisse-t-on rentrer ?</h2>
+    <p class="note">
+      Tu m'as dit « trop de couleurs ». Donc la question n'est pas quelle nuance de rouge — c'est
+      <strong>est-ce qu'on met de la couleur du tout</strong>. Trois cas réels de l'API : upload échoué,
+      quota projet dépassé, fichier trop lourd.
+    </p>
+    <div class="cols co" id="sem"></div>
+    <div class="callout reco" style="margin-top:16px">
+      <strong>Ma recommandation : la couleur sur l'icône seule (B).</strong> Le zéro couleur (A) est le
+      plus pur mais dangereux : une erreur qui ressemble à une information se rate, et ici ça veut dire
+      un fichier que le client croit envoyé. Le bandeau plein (C) réintroduit exactement ce que tu
+      rejettes. L'icône colorée suffit à alerter, occupe 18 px, et le message reste lisible en
+      monochrome — c'est aussi la seule option qui reste correcte pour un daltonien, puisque le mot
+      porte l'information.
+    </div>
+  </section>
+</div>
+
+<script>
+/* @ICONS — remplacé par build-foundations.ps1 */
+
+(() => {
+  "use strict";
+
+  const SETS = [
+    { id: "lucide",   name: "Lucide",   fill: "stroke", note: "trait rond, très répandu · lucide-react-native" },
+    { id: "tabler",   name: "Tabler",   fill: "stroke", note: "trait régulier, jeu immense · @tabler/icons-react-native" },
+    { id: "feather",  name: "Feather",  fill: "stroke", note: "minimal, l'ancêtre · inclus dans @expo/vector-icons" },
+    { id: "phosphor", name: "Phosphor", fill: "fill",   note: "remplissage, aussi dispo en thin/light/bold · phosphor-react-native" }
+  ];
+  const ORDER = ["play","pause","waveform","fileAudio","versions","upload","download","attach","send",
+                 "members","settings","search","calendar","plus","check","alert","close","more","chevron","trash"];
+
+  const state = { mode: "light", set: "lucide", sw: "1.75" };
+
+  const AXES = [
+    { key: "mode", label: "Mode", opts: [{ v: "light", l: "Clair" }, { v: "dark", l: "Sombre" }] },
+    { key: "set", label: "Icônes", opts: SETS.map(s => ({ v: s.id, l: s.name })) },
+    { key: "sw", label: "Épaisseur de trait", opts: [{ v: "1.5", l: "1,5" }, { v: "1.75", l: "1,75" }, { v: "2", l: "2" }] }
+  ];
+
+  const ic = (name, set) => `<span class="ico">${(ICONS[set || state.set] || {})[name] || ""}</span>`;
+  const WAVE = Array.from({ length: 26 }, (_, i) =>
+    Math.round(24 + 70 * Math.abs(Math.sin(i * .85) * Math.cos(i * .37))));
+
+  /* ---- 1. icônes ---- */
+  const iconBoard = () => SETS.map(s => `
+    <div class="setrow" data-on="${s.id === state.set ? 1 : 0}" data-fill="${s.fill}">
+      <span class="setname">${s.name}<br><span style="font-weight:400;font-size:10px;opacity:.7">${s.fill === "fill" ? "rempli" : "tracé"}</span></span>
+      <span class="setglyphs">${ORDER.map(n => ic(n, s.id)).join("")}</span>
+    </div>`).join("");
+
+  const situ = () => {
+    const frag = `
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="fcard">
+          <span class="play">${ic("play")}</span>
+          <span class="fmeta">
+            <span class="fname">nova_mix_v3.wav <span class="vchip">V3</span></span>
+            <span class="fsub num">48,2 Mo · WAV 24 bits / 48 kHz · il y a 2 h</span>
+          </span>
+          <span class="wave">${WAVE.map((h, i) => `<i style="height:${h}%" data-on="${i < 11 ? 1 : 0}"></i>`).join("")}</span>
+          <span class="iconbtn">${ic("download")}</span>
+          <span class="iconbtn">${ic("more")}</span>
+        </div>
+        <div class="bar">
+          <span class="iconbtn">${ic("attach")}</span>
+          <span class="inp">Écrire un message…</span>
+          <button class="btn btn-primary">${ic("send")} Envoyer</button>
+        </div>
+        <div class="bar">
+          <button class="btn btn-ghost">${ic("versions")} Nouvelle version</button>
+          <button class="btn btn-ghost">${ic("members")} Membres</button>
+          <button class="btn btn-ghost">${ic("upload")} Envoyer un fichier</button>
+        </div>
+      </div>`;
+    return ["light", "dark"].map(m => `
+      <div><div class="duo-l">${m === "light" ? "Clair" : "Sombre"}</div>
+      <div class="board co" data-mode="${m}" data-fill="${SETS.find(s => s.id === state.set).fill}" style="--sw:${state.sw}">${frag}</div></div>`).join("");
+  };
+
+  /* ---- 2. élévation ---- */
+  const elev = () => {
+    const card = (cls, t, s) => `<div class="elev ${cls}"><div class="elev-t">${t}</div><div class="elev-s">${s}</div></div>`;
+    const frag = `<div class="elev-grid">
+      ${card("elev-a", "A · filet seul", "bordure, fond identique au canvas")}
+      ${card("elev-b", "B · fond seul", "surface plus claire, aucune bordure")}
+      ${card("elev-c", "C · fond + ombre", "surface et ombre portée basse")}
+      ${card("elev-d", "D · fond + filet", "surface et bordure, sans ombre")}
+    </div>`;
+    return ["light", "dark"].map(m => `
+      <div><div class="duo-l">${m === "light" ? "Clair" : "Sombre"}</div>
+      <div class="board co" data-mode="${m}">${frag}</div></div>`).join("");
+  };
+
+  /* ---- 3. états ---- */
+  const STATES = [
+    { n: "repos", bg: "transparent", sel: 0, focus: 0, off: 0, hex: "transparent" },
+    { n: "survol", bg: "var(--hov)", sel: 0, focus: 0, off: 0, hex: "--hov" },
+    { n: "sélectionné", bg: "var(--sel)", sel: 1, focus: 0, off: 0, hex: "--sel" },
+    { n: "sélect. + survol", bg: "var(--selhov)", sel: 1, focus: 0, off: 0, hex: "--selhov" },
+    { n: "focus clavier", bg: "transparent", sel: 0, focus: 1, off: 0, hex: "anneau --ring" },
+    { n: "désactivé", bg: "transparent", sel: 0, focus: 0, off: 1, hex: "opacité 42 %" }
+  ];
+  const STRATS = [
+    { id: "light", n: "1 · clarté seule" },
+    { id: "bar", n: "2 · clarté + barre latérale" },
+    { id: "weight", n: "3 · clarté + graisse" }
+  ];
+  const states = () => ["light", "dark"].map(m => `
+    <div><div class="duo-l">${m === "light" ? "Clair" : "Sombre"}</div>
+      <div class="board co" data-mode="${m}" style="display:flex;flex-direction:column;gap:20px">
+        ${STRATS.map(st => `
+          <div>
+            <div class="lab" style="margin-bottom:8px">${st.n}</div>
+            <div class="states">
+              ${STATES.map(s => `
+                <div class="strow">
+                  <span class="stname">${s.n}</span>
+                  <div class="prow" data-strat="${st.id}" data-sel="${s.sel}" data-focus="${s.focus}" data-off="${s.off}" style="background:${s.bg}">
+                    <span class="pav">NM</span>
+                    <span class="ptxt">
+                      <span class="pname">Nova × La Mante</span>
+                      <span class="psub">le mix v3 est en ligne</span>
+                    </span>
+                    <span class="pbadge num">2</span>
+                  </div>
+                  <span class="sthex">${s.hex}</span>
+                </div>`).join("")}
+            </div>
+          </div>`).join("")}
+      </div></div>`).join("");
+
+  /* ---- 4. sémantique ---- */
+  const CASES = [
+    { i: "alert", t: "L'envoi a échoué", s: "nova_stems.zip · réessayer", tone: "danger" },
+    { i: "alert", t: "Projet plein", s: "10 Go sur 10 Go utilisés · libère de la place", tone: "danger" },
+    { i: "alert", t: "Fichier trop lourd", s: "session_full.zip fait 2,4 Go · maximum 2 Go", tone: "danger" },
+    { i: "check", t: "Envoi terminé", s: "nova_mix_v3.wav · visible par le studio", tone: "ok" }
+  ];
+  const TONES = {
+    light: { danger: "#b4231f", ok: "#0f7a4d", dangerBg: "#fdf2f2", okBg: "#f0f9f4" },
+    dark:  { danger: "#f08a86", ok: "#4ec08a", dangerBg: "#2a1614", okBg: "#12261d" }
+  };
+  const sem = () => {
+    const variants = [
+      { k: "A", n: "zéro couleur", build: (c, T) => `<div class="sem">${ic(c.i)}<div><div class="sem-t">${c.t}</div><div class="sem-s">${c.s}</div></div></div>` },
+      { k: "B", n: "couleur sur l'icône", build: (c, T) => `<div class="sem"><span class="ico" style="color:${T[c.tone]}">${(ICONS[state.set] || {})[c.i] || ""}</span><div><div class="sem-t">${c.t}</div><div class="sem-s">${c.s}</div></div></div>` },
+      { k: "C", n: "bandeau coloré", build: (c, T) => `<div class="sem-b" style="background:${T[c.tone + "Bg"]};border:1px solid ${T[c.tone]}40"><span class="ico" style="color:${T[c.tone]}">${(ICONS[state.set] || {})[c.i] || ""}</span><div><div class="sem-t" style="color:${T[c.tone]}">${c.t}</div><div class="sem-s">${c.s}</div></div></div>` }
+    ];
+    return variants.map(v => `
+      <div>
+        <div class="col-h" style="color:var(--ink-3)">${v.k} · ${v.n}</div>
+        ${["light", "dark"].map(m => `
+          <div class="board co" data-mode="${m}" data-fill="${SETS.find(s => s.id === state.set).fill}" style="--sw:${state.sw};margin-bottom:10px">
+            <div class="sem-grid">${CASES.map(c => v.build(c, TONES[m])).join("")}</div>
+          </div>`).join("")}
+      </div>`).join("");
+  };
+
+  const apply = () => {
+    const s = SETS.find(x => x.id === state.set);
+    document.querySelectorAll(".co").forEach(el => {
+      el.style.setProperty("--sw", state.sw);
+      if (!el.dataset.mode) el.dataset.mode = state.mode;
+      el.dataset.fill = s.fill;
+    });
+    document.getElementById("iconBoard").innerHTML = iconBoard();
+    document.getElementById("iconBoard").dataset.mode = state.mode;
+    document.getElementById("iconSitu").innerHTML = situ();
+    document.getElementById("elev").innerHTML = elev();
+    document.getElementById("states").innerHTML = states();
+    document.getElementById("sem").innerHTML = sem();
+    document.querySelectorAll(".cbtn").forEach(b => {
+      b.setAttribute("aria-pressed", String(state[b.dataset.axis] === b.dataset.val));
+    });
+    document.querySelectorAll(".co[data-mode]").forEach(el => { el.style.setProperty("--sw", state.sw); });
+  };
+
+  document.getElementById("controls").innerHTML = AXES.map(a => `
+    <div class="cgroup">
+      <span class="clabel">${a.label}</span>
+      <div class="cbtns">
+        ${a.opts.map(o => `<button class="cbtn" type="button" data-axis="${a.key}" data-val="${o.v}" aria-pressed="false">${o.l}</button>`).join("")}
+      </div>
+    </div>`).join("") + `
+    <div class="cgroup" style="flex:1;min-width:220px">
+      <span class="clabel">Note</span>
+      <span style="font-size:12.5px;color:var(--ink-2)" id="setNote"></span>
+    </div>`;
+
+  document.getElementById("controls").addEventListener("click", e => {
+    const b = e.target.closest(".cbtn");
+    if (!b) return;
+    state[b.dataset.axis] = b.dataset.val;
+    apply();
+    document.getElementById("setNote").textContent = SETS.find(x => x.id === state.set).note;
+  });
+
+  apply();
+  document.getElementById("setNote").textContent = SETS.find(x => x.id === state.set).note;
+})();
+</script>

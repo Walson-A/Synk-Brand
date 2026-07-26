@@ -1,6 +1,12 @@
 node_modules/
 build/
 dist/
+
+# Pages de validation GÉNÉRÉES par design/colab/build-*.ps1 (polices et icônes
+# embarquées en data URI → gros et dérivés). Les sources .src.html sont versionnées,
+# les scripts les régénèrent.
+design/colab/_directions.html
+design/colab/_foundations.html
 *.log
 .DS_Store
 .env

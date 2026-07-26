@@ -1,0 +1,469 @@
+<title>COLAB — porte 2 : typographie & densité</title>
+
+<style>
+/* @FONTFACES — remplacé par build-type.ps1 (woff2 en data URI, CDN bloqués en artifact) */
+
+  :root {
+    --ink: #12161c; --ink-2: #4a5462; --ink-3: #79838f;
+    --page: #fcfcfd; --panel: #ffffff;
+    --line: rgba(18,22,28,0.12); --line-soft: rgba(18,22,28,0.06);
+    --mark: #b45309; --ok: #0f7a4d;
+    --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+    --ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e7eaef; --ink-2: #9aa5b3; --ink-3: #6b7683;
+      --page: #0d1015; --panel: #14181f;
+      --line: rgba(231,234,239,0.14); --line-soft: rgba(231,234,239,0.07);
+      --mark: #e0a458; --ok: #4ec08a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #e7eaef; --ink-2: #9aa5b3; --ink-3: #6b7683;
+    --page: #0d1015; --panel: #14181f;
+    --line: rgba(231,234,239,0.14); --line-soft: rgba(231,234,239,0.07);
+    --mark: #e0a458; --ok: #4ec08a;
+  }
+  :root[data-theme="light"] {
+    --ink: #12161c; --ink-2: #4a5462; --ink-3: #79838f;
+    --page: #fcfcfd; --panel: #ffffff;
+    --line: rgba(18,22,28,0.12); --line-soft: rgba(18,22,28,0.06);
+    --mark: #b45309; --ok: #0f7a4d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: var(--ui); font-size: 15px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 36px 24px 96px; }
+
+  .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  h1 { margin: 8px 0 10px; font-size: clamp(26px,3.4vw,38px); line-height: 1.08; letter-spacing: -.025em; font-weight: 680; text-wrap: balance; }
+  .lede { margin: 0; max-width: 74ch; color: var(--ink-2); font-size: 16px; }
+  h2 { margin: 54px 0 4px; font-size: 19px; letter-spacing: -.016em; font-weight: 650; }
+  .note { margin: 0 0 18px; max-width: 78ch; color: var(--ink-2); font-size: 14px; }
+  .kbd { font-family: var(--mono); font-size: .87em; background: var(--line-soft); padding: 1px 5px; border-radius: 4px; }
+
+  .callout {
+    border-left: 3px solid var(--ok); background: color-mix(in srgb, var(--ok) 8%, transparent);
+    padding: 13px 16px; border-radius: 0 8px 8px 0; font-size: 13.5px; color: var(--ink-2); max-width: 80ch;
+  }
+  .callout strong { color: var(--ink); }
+
+  /* ---------- barre de contrôle ---------- */
+  .controls {
+    position: sticky; top: 0; z-index: 20; margin: 26px 0 18px;
+    background: color-mix(in srgb, var(--page) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    display: flex; flex-wrap: wrap; gap: 14px 26px;
+  }
+  .cgroup { display: flex; flex-direction: column; gap: 6px; }
+  .clabel { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--ink-3); }
+  .cbtns { display: flex; flex-wrap: wrap; gap: 5px; }
+  .cbtn {
+    font: inherit; font-size: 12.5px; font-weight: 550; color: var(--ink-2);
+    background: transparent; border: 1px solid var(--line); border-radius: 7px;
+    padding: 5px 11px; cursor: pointer; transition: background .12s, color .12s, border-color .12s;
+  }
+  .cbtn:hover { background: var(--line-soft); color: var(--ink); }
+  .cbtn:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+  .cbtn[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .cbtn { transition: none; } }
+
+  .meta-line { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 12px; font-size: 12.5px; color: var(--ink-2); }
+  .meta-line b { color: var(--ink); font-weight: 640; }
+  .tagm { border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; }
+
+  /* =========================================================
+     LA SCÈNE — palette figée (palette.md), tout le reste pilotable
+     ========================================================= */
+  .stage {
+    font-family: var(--ff);
+    border-radius: 12px; overflow: hidden; border: 1px solid var(--line);
+    display: grid; grid-template-columns: var(--w-rail) minmax(0,1fr) var(--w-aside);
+    height: 660px;
+    background: var(--canvas); color: var(--txt);
+    font-size: var(--fs-body); letter-spacing: var(--tr-body);
+  }
+  @media (max-width: 1080px) { .stage { grid-template-columns: var(--w-rail) minmax(0,1fr); height: 620px; } .aside { display: none; } }
+  @media (max-width: 720px) { .stage { grid-template-columns: 1fr; } .rail { display: none; } }
+
+  .stage[data-mode="light"] {
+    --canvas: #ffffff; --rail: #f3f7fc; --surf: #f3f7fc; --chip: #e3edf7; --sel: #e3edf7;
+    --bord: #c6d8eb; --txt: #091420; --mut: #527294; --wave: #9db9d7;
+    --act: #1B395A; --acton: #ffffff; --brand: #1B395A;
+  }
+  .stage[data-mode="dark"] {
+    --canvas: #090d10; --rail: #05080a; --surf: #293a4c; --chip: #304254; --sel: #293a4c;
+    --bord: #2f3d4c; --txt: #f5f7fa; --mut: #aabaca; --wave: #527294;
+    --act: #ffffff; --acton: #0e141b; --brand: #1B395A;
+  }
+
+  .stage[data-density="compact"] {
+    --fs-big: 15px; --fs-title: 13.5px; --fs-body: 13px; --fs-sm: 11.5px; --fs-lab: 10px;
+    --pad-pane: 12px 14px; --pad-row: 6px 8px; --pad-bub: 7px 10px; --pad-ctl: 6px 11px;
+    --gap-thread: 8px; --gap-row: 1px; --w-rail: 216px; --w-aside: 236px; --av: 22px;
+  }
+  .stage[data-density="cosy"] {
+    --fs-big: 17px; --fs-title: 15px; --fs-body: 14.5px; --fs-sm: 12.5px; --fs-lab: 11px;
+    --pad-pane: 18px 20px; --pad-row: 9px 10px; --pad-bub: 10px 14px; --pad-ctl: 9px 15px;
+    --gap-thread: 12px; --gap-row: 3px; --w-rail: 246px; --w-aside: 262px; --av: 27px;
+  }
+
+  .stage[data-radius="sharp"] { --r-sm: 2px; --r-md: 3px; --r-lg: 4px; }
+  .stage[data-radius="crisp"] { --r-sm: 4px; --r-md: 6px; --r-lg: 8px; }
+  .stage[data-radius="soft"]  { --r-sm: 8px; --r-md: 11px; --r-lg: 14px; }
+
+  .stage[data-caps="on"] .lab { text-transform: uppercase; letter-spacing: .13em; font-weight: 700; }
+  .stage[data-caps="off"] .lab { text-transform: none; letter-spacing: .02em; font-weight: 600; }
+
+  .lab { font-size: var(--fs-lab); color: var(--mut); }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* --- rail --- */
+  .rail { background: var(--rail); border-right: 1px solid var(--bord); padding: var(--pad-pane); display: flex; flex-direction: column; gap: var(--gap-row); overflow: hidden; }
+  .brandrow { display: flex; align-items: center; gap: 9px; padding-bottom: 12px; }
+  .tile { width: 28px; height: 28px; border-radius: var(--r-sm); background: var(--brand); display: grid; place-items: center; flex: none; }
+  .tile svg { width: 19px; height: 19px; color: #fff; display: block; }
+  .wordmark { font-size: var(--fs-title); font-weight: 700; letter-spacing: .04em; }
+  .search { padding: var(--pad-row); border-radius: var(--r-sm); background: var(--chip); color: var(--mut); font-size: var(--fs-sm); margin-bottom: 11px; }
+  .railhead { display: flex; align-items: center; justify-content: space-between; padding: 0 6px 7px; }
+  .prow { display: flex; align-items: center; gap: 9px; padding: var(--pad-row); border-radius: var(--r-sm); }
+  .prow[data-sel="1"] { background: var(--sel); }
+  .pav { width: var(--av); height: var(--av); border-radius: var(--r-sm); display: grid; place-items: center; flex: none; font-size: var(--fs-lab); font-weight: 700; background: var(--chip); color: var(--mut); }
+  .prow[data-sel="1"] .pav { background: var(--act); color: var(--acton); }
+  .ptxt { flex: 1; min-width: 0; }
+  .pname, .psub { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pname { font-size: var(--fs-sm); font-weight: 600; }
+  .prow[data-unread="1"] .pname { font-weight: 700; }
+  .psub { font-size: var(--fs-lab); color: var(--mut); }
+  .pbadge { flex: none; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; display: grid; place-items: center; font-size: var(--fs-lab); font-weight: 800; background: var(--act); color: var(--acton); }
+  .railfoot { margin-top: auto; padding-top: 11px; border-top: 1px solid var(--bord); display: flex; align-items: center; gap: 9px; }
+
+  /* --- fil --- */
+  .thread { display: flex; flex-direction: column; padding: var(--pad-pane); overflow: hidden; }
+  .thead { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--bord); }
+  .ttitle { font-size: var(--fs-big); font-weight: 700; letter-spacing: -.012em; }
+  .tmeta { font-size: var(--fs-sm); color: var(--mut); margin-top: 1px; }
+  .tacts { display: flex; gap: 7px; flex: none; }
+  .btn { font-family: inherit; font-size: var(--fs-sm); font-weight: 620; padding: var(--pad-ctl); border-radius: var(--r-sm); border: 1px solid transparent; cursor: default; white-space: nowrap; }
+  .btn-ghost { background: transparent; color: var(--txt); border-color: var(--bord); }
+  .btn-primary { background: var(--act); color: var(--acton); }
+  .stage[data-caps="on"] .btn { text-transform: uppercase; letter-spacing: .1em; font-weight: 700; font-size: calc(var(--fs-sm) - .5px); }
+
+  .flow { flex: 1; display: flex; flex-direction: column; gap: var(--gap-thread); padding-top: 12px; overflow: hidden; }
+  .daysep { display: flex; align-items: center; gap: 10px; }
+  .daysep i { flex: 1; height: 1px; background: var(--bord); }
+  .sys { text-align: center; font-size: var(--fs-sm); color: var(--mut); }
+  .msg { display: flex; align-items: flex-end; gap: 8px; }
+  .msg[data-me="1"] { flex-direction: row-reverse; }
+  .mav { width: var(--av); height: var(--av); border-radius: var(--r-sm); display: grid; place-items: center; flex: none; font-size: var(--fs-lab); font-weight: 700; background: var(--chip); color: var(--mut); }
+  .bub { max-width: 74%; padding: var(--pad-bub); border-radius: var(--r-md); background: var(--surf); }
+  .msg[data-me="1"] .bub { background: var(--act); color: var(--acton); }
+  .bubtime { font-size: var(--fs-lab); color: var(--mut); margin-top: 3px; }
+  .msg[data-me="1"] .bubtime { color: var(--acton); opacity: .62; }
+
+  .fcard { display: flex; align-items: center; gap: 11px; padding: var(--pad-bub); border-radius: var(--r-md); background: var(--surf); border: 1px solid var(--bord); }
+  .fico { width: calc(var(--av) + 8px); height: calc(var(--av) + 8px); border-radius: var(--r-sm); display: grid; place-items: center; flex: none; font-size: calc(var(--fs-lab) - .5px); font-weight: 800; letter-spacing: .04em; background: var(--chip); color: var(--mut); }
+  .fmeta { flex: 1; min-width: 0; }
+  .fname { display: flex; align-items: center; gap: 7px; font-size: var(--fs-sm); font-weight: 650; }
+  .vchip { font-size: calc(var(--fs-lab) - .5px); font-weight: 800; padding: 1px 5px; border-radius: calc(var(--r-sm) - 1px); background: var(--chip); color: var(--mut); letter-spacing: .06em; }
+  .fsub { font-size: var(--fs-lab); color: var(--mut); }
+  .wave { display: flex; align-items: center; gap: 1.5px; height: 26px; width: 104px; flex: none; }
+  .wave i { flex: 1; border-radius: 1px; background: var(--wave); }
+  .wave i[data-on="1"] { background: var(--txt); }
+  .play { width: calc(var(--av) + 4px); height: calc(var(--av) + 4px); border-radius: 999px; background: var(--act); color: var(--acton); display: grid; place-items: center; flex: none; }
+  .play svg { width: 10px; height: 10px; display: block; }
+
+  .composer { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--bord); }
+  .clip { width: calc(var(--av) + 6px); height: calc(var(--av) + 6px); border-radius: var(--r-sm); border: 1px solid var(--bord); display: grid; place-items: center; color: var(--mut); flex: none; font-size: var(--fs-sm); }
+  .inp { flex: 1; padding: var(--pad-ctl); border-radius: var(--r-sm); background: var(--surf); border: 1px solid var(--bord); color: var(--mut); font-size: var(--fs-sm); }
+
+  /* --- colonne droite --- */
+  .aside { background: var(--rail); border-left: 1px solid var(--bord); padding: var(--pad-pane); display: flex; flex-direction: column; gap: 16px; overflow: hidden; }
+  .block { display: flex; flex-direction: column; gap: 7px; }
+  .sesscard { padding: var(--pad-bub); border-radius: var(--r-md); background: var(--surf); border: 1px solid var(--bord); }
+  .sessd { font-size: var(--fs-title); font-weight: 700; letter-spacing: -.01em; }
+  .sesss { font-size: var(--fs-lab); color: var(--mut); margin-top: 2px; }
+  .frow { display: flex; align-items: center; gap: 8px; padding: calc(var(--fs-lab) * .4) 0; }
+  .fmini { width: 22px; height: 22px; border-radius: calc(var(--r-sm) - 1px); display: grid; place-items: center; flex: none; font-size: calc(var(--fs-lab) - 1.5px); font-weight: 800; background: var(--chip); color: var(--mut); }
+  .fmn { flex: 1; min-width: 0; font-size: var(--fs-lab); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .avstack { display: flex; }
+  .avstack > span { width: 24px; height: 24px; border-radius: 999px; display: grid; place-items: center; font-size: calc(var(--fs-lab) - 1px); font-weight: 700; background: var(--chip); color: var(--mut); border: 2px solid var(--rail); margin-left: -6px; }
+  .avstack > span:first-child { margin-left: 0; }
+
+  /* ---------- specimens ---------- */
+  .specs { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .spec { border: 1px solid var(--line); border-radius: 11px; padding: 16px 18px; background: var(--panel); display: flex; flex-direction: column; gap: 10px; }
+  .spec-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .spec-n { font-size: 13px; font-weight: 680; letter-spacing: -.01em; }
+  .spec-t { font-size: 11.5px; color: var(--ink-3); }
+  .spec-body { display: flex; flex-direction: column; gap: 7px; }
+  .spec-display { font-size: 27px; font-weight: 700; letter-spacing: -.02em; line-height: 1.06; }
+  .spec-para { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); }
+  .spec-ui { display: flex; flex-wrap: wrap; gap: 5px 12px; font-size: 12px; color: var(--ink-2); align-items: baseline; }
+  .spec-ui b { font-weight: 700; color: var(--ink); }
+  .spec-ui .caps { text-transform: uppercase; letter-spacing: .13em; font-weight: 700; font-size: 10px; }
+  .spec-pick { align-self: flex-start; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">COLAB · chantier C11 · porte 2</div>
+  <h1>Typographie &amp; densité</h1>
+  <p class="lede">
+    Sept vraies polices, téléchargées et embarquées dans la page — plus de doublures, plus de
+    substitution silencieuse. Toutes sont <strong>libres (OFL)</strong>, self-hostables en web et
+    disponibles via <span class="kbd">@expo-google-fonts</span> pour l'app studio. La palette ne bouge pas.
+  </p>
+
+  <div class="callout" style="margin-top:20px">
+    <strong>Un seul écran, des sélecteurs.</strong> Change la police, le mode, la densité, les rayons
+    et la casse des étiquettes — l'écran réagit en direct. C'est plus utile que quatorze captures figées :
+    tu isoles exactement la variable qui te gêne.
+  </div>
+
+  <div class="controls" id="controls"></div>
+  <div class="meta-line" id="metaLine"></div>
+
+  <div class="stage" id="stage" data-mode="light" data-density="compact" data-radius="crisp" data-caps="off"></div>
+
+  <h2>Les sept, sur les mêmes mots</h2>
+  <p class="note">
+    Pour comparer les lettres sans basculer l'écran : le nom du projet en grand, un message réel, puis
+    ce qui compte vraiment dans cette interface — un nom de fichier, des chiffres, une étiquette en capitales.
+  </p>
+  <div class="specs" id="specs"></div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const FONTS = [
+    { id: "Inter", name: "Inter", stack: "Inter", note: "neutre — la police de SYNK",
+      why: "Le choix sûr : c'est déjà la police de l'écosystème. Zéro friction, zéro signature." },
+    { id: "Geist", name: "Geist", stack: "Geist", note: "mécanique, pensée pour la densité",
+      why: "Conçue par Vercel pour les tableaux de bord et les outils de dev. Lettres légèrement mécaniques, excellente en petit corps." },
+    { id: "Archivo", name: "Archivo", stack: "Archivo", note: "grotesque solide",
+      why: "Plus large et plus charpentée qu'Inter. Donne du poids aux titres sans crier." },
+    { id: "Manrope", name: "Manrope", stack: "Manrope", note: "géométrique semi-arrondie",
+      why: "Terminaisons douces, formes géométriques. La plus chaleureuse des sept sans devenir molle." },
+    { id: "IBMPlexSans", name: "IBM Plex Sans", stack: "'IBM Plex Sans'", note: "humaniste d'ingénierie",
+      why: "Signature très identifiable, registre technique assumé. Faite pour les interfaces sérieuses." },
+    { id: "SpaceGrotesk", name: "Space Grotesk", stack: "'Space Grotesk'", note: "technique à caractère",
+      why: "La plus typée : détails inhabituels, personnalité forte. Signe immédiatement, au risque de fatiguer." },
+    { id: "Sora", name: "Sora", stack: "Sora", note: "géométrique contemporaine",
+      why: "Formes ouvertes et larges. Plus jeune de ton, très lisible en gros corps." }
+  ];
+
+  const AXES = [
+    { key: "font", label: "Police", opts: FONTS.map(f => ({ v: f.id, l: f.name })) },
+    { key: "mode", label: "Mode", opts: [{ v: "light", l: "Clair" }, { v: "dark", l: "Sombre" }] },
+    { key: "density", label: "Densité", opts: [{ v: "compact", l: "Compacte" }, { v: "cosy", l: "Confortable" }] },
+    { key: "radius", label: "Rayons", opts: [{ v: "sharp", l: "Vifs 2px" }, { v: "crisp", l: "Nets 4px" }, { v: "soft", l: "Doux 8px" }] },
+    { key: "caps", label: "Étiquettes", opts: [{ v: "off", l: "Casse normale" }, { v: "on", l: "Capitales espacées" }] }
+  ];
+
+  const state = { font: "Geist", mode: "light", density: "compact", radius: "crisp", caps: "off" };
+  const stage = document.getElementById("stage");
+
+  /* ---------- le mark, placeholder géométrique (master refait en fin de chantier) ---------- */
+  const MARK = `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <defs>
+      <mask id="mk-l"><rect width="100" height="100" fill="#fff"/><circle cx="50" cy="66" r="7.5" fill="#000"/></mask>
+      <mask id="mk-r"><rect width="100" height="100" fill="#fff"/><circle cx="50" cy="34" r="7.5" fill="#000"/></mask>
+    </defs>
+    <circle cx="38" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="8.5" mask="url(#mk-l)"/>
+    <circle cx="62" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="8.5" mask="url(#mk-r)"/>
+  </svg>`;
+  const PLAY = `<svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0v12l10-6z" fill="currentColor"/></svg>`;
+
+  const PROJECTS = [
+    ["NM", "Nova × La Mante", "le mix v3 est en ligne", 2, 1],
+    ["AL", "Abel × La Mante", "session confirmée jeudi", 5, 0],
+    ["KS", "Kaya × Studio 9", "tu peux renvoyer les stems ?", 0, 0],
+    ["LS", "Léo × Studio 9", "j'ai bouncé en 24 bits", 0, 0],
+    ["MT", "Maë × Tigre Blanc", "merci pour la session 🙏", 0, 0]
+  ];
+  const RECENT = [
+    ["WAV", "nova_mix_v3.wav", "v3"],
+    ["ZIP", "nova_stems.zip", "v1"],
+    ["FLP", "nova_session.flp", "v7"]
+  ];
+  const WAVE = Array.from({ length: 26 }, (_, i) =>
+    Math.round(24 + 70 * Math.abs(Math.sin(i * .85) * Math.cos(i * .37)))
+  );
+
+  const render = () => {
+    stage.innerHTML = `
+      <aside class="rail">
+        <div class="brandrow">
+          <span class="tile">${MARK}</span>
+          <span class="wordmark">COLAB</span>
+        </div>
+        <div class="search">Rechercher un projet…</div>
+        <div class="railhead">
+          <span class="lab">Projets</span>
+          <span class="lab num">5</span>
+        </div>
+        ${PROJECTS.map(([ini, name, sub, n, sel]) => `
+          <div class="prow" data-sel="${sel}" data-unread="${n ? 1 : 0}">
+            <span class="pav">${ini}</span>
+            <span class="ptxt">
+              <span class="pname">${name}</span>
+              <span class="psub">${sub}</span>
+            </span>
+            ${n ? `<span class="pbadge num">${n}</span>` : ""}
+          </div>`).join("")}
+        <div class="railfoot">
+          <span class="pav">WA</span>
+          <span class="ptxt">
+            <span class="pname">walson</span>
+            <span class="psub">Studio La Mante</span>
+          </span>
+        </div>
+      </aside>
+
+      <section class="thread">
+        <div class="thead">
+          <div>
+            <div class="ttitle">Nova × Studio La Mante</div>
+            <div class="tmeta num">3 sessions · 8 fichiers · 4 membres</div>
+          </div>
+          <div class="tacts">
+            <button class="btn btn-ghost">Fichiers</button>
+            <button class="btn btn-ghost">Membres</button>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div class="daysep"><i></i><span class="lab">Aujourd'hui</span><i></i></div>
+          <div class="sys">Studio La Mante a ajouté Nova au projet</div>
+
+          <div class="msg" data-me="0">
+            <span class="mav">LM</span>
+            <div class="bub">
+              J'ai bouncé le mix hier soir, la voix est remontée de 2 dB et j'ai calmé les sifflantes
+              <div class="bubtime num">14:02</div>
+            </div>
+          </div>
+
+          <div class="msg" data-me="1">
+            <div class="bub">
+              Nickel, j'écoute ça ce soir et je te fais un retour
+              <div class="bubtime num">14:09</div>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <span class="play">${PLAY}</span>
+            <span class="fmeta">
+              <span class="fname">nova_mix_v3.wav <span class="vchip">V3</span></span>
+              <span class="fsub num">48,2 Mo · WAV 24 bits / 48 kHz · il y a 2 h</span>
+            </span>
+            <span class="wave">
+              ${WAVE.map((h, i) => `<i style="height:${h}%" data-on="${i < 11 ? 1 : 0}"></i>`).join("")}
+            </span>
+          </div>
+        </div>
+
+        <div class="composer">
+          <span class="clip">+</span>
+          <span class="inp">Écrire un message…</span>
+          <button class="btn btn-primary">Envoyer</button>
+        </div>
+      </section>
+
+      <aside class="aside">
+        <div class="block">
+          <span class="lab">Prochaine session</span>
+          <div class="sesscard">
+            <div class="sessd">Jeudi 30 juillet</div>
+            <div class="sesss num">14:00 – 18:00 · Studio La Mante</div>
+          </div>
+        </div>
+        <div class="block">
+          <span class="lab">Fichiers récents</span>
+          ${RECENT.map(([ext, name, v]) => `
+            <div class="frow">
+              <span class="fmini">${ext}</span>
+              <span class="fmn">${name}</span>
+              <span class="vchip">${v}</span>
+            </div>`).join("")}
+        </div>
+        <div class="block">
+          <span class="lab">Membres</span>
+          <div class="avstack">
+            <span>NV</span><span>LM</span><span>WA</span><span>+1</span>
+          </div>
+        </div>
+      </aside>`;
+  };
+
+  const apply = () => {
+    const f = FONTS.find(x => x.id === state.font);
+    stage.style.setProperty("--ff", `${f.stack}, system-ui, sans-serif`);
+    stage.dataset.mode = state.mode;
+    stage.dataset.density = state.density;
+    stage.dataset.radius = state.radius;
+    stage.dataset.caps = state.caps;
+
+    document.querySelectorAll(".cbtn").forEach(b => {
+      b.setAttribute("aria-pressed", String(state[b.dataset.axis] === b.dataset.val));
+    });
+
+    document.getElementById("metaLine").innerHTML = `
+      <span class="tagm"><b>${f.name}</b> — ${f.note}</span>
+      <span class="tagm">libre OFL · <span class="kbd">@expo-google-fonts/${f.id.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase()}</span></span>
+      <span>${f.why}</span>`;
+  };
+
+  document.getElementById("controls").innerHTML = AXES.map(a => `
+    <div class="cgroup">
+      <span class="clabel">${a.label}</span>
+      <div class="cbtns">
+        ${a.opts.map(o => `<button class="cbtn" type="button" data-axis="${a.key}" data-val="${o.v}" aria-pressed="false">${o.l}</button>`).join("")}
+      </div>
+    </div>`).join("");
+
+  document.getElementById("controls").addEventListener("click", e => {
+    const b = e.target.closest(".cbtn");
+    if (!b) return;
+    state[b.dataset.axis] = b.dataset.val;
+    apply();
+  });
+
+  document.getElementById("specs").innerHTML = FONTS.map(f => `
+    <div class="spec" style="font-family:${f.stack}, system-ui, sans-serif">
+      <div class="spec-h">
+        <span class="spec-n">${f.name}</span>
+        <span class="spec-t" style="font-family:var(--ui)">${f.note}</span>
+      </div>
+      <div class="spec-body">
+        <div class="spec-display">Nova × Studio La Mante</div>
+        <p class="spec-para">J'ai bouncé le mix hier soir, la voix est remontée de 2 dB et j'ai calmé les sifflantes.</p>
+        <div class="spec-ui">
+          <b>nova_mix_v3.wav</b>
+          <span class="num">48,2 Mo · 24 bits / 48 kHz · 14:02</span>
+          <span class="caps">Projets</span>
+        </div>
+      </div>
+      <button class="cbtn spec-pick" type="button" data-axis="font" data-val="${f.id}" style="font-family:var(--ui)">Voir dans l'écran</button>
+    </div>`).join("");
+
+  document.getElementById("specs").addEventListener("click", e => {
+    const b = e.target.closest(".cbtn");
+    if (!b) return;
+    state.font = b.dataset.val;
+    apply();
+    document.getElementById("controls").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  render();
+  apply();
+})();
+</script>

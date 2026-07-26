@@ -1,6 +1,11 @@
 # @synk/brand
 
-Source unique de vérité pour la marque **SYNK** — logo, composant de logo animé, et design tokens — partagée par le **site** (`Synk-Website`) et l'**app** (`Synk-App`).
+Source unique de vérité pour les marques de l'écosystème — logo, composant de logo animé, design tokens et composants.
+
+- **SYNK** — le site (`Synk-Website`) et l'app (`Synk-App`). Violet, dark-only, Inter.
+- **COLAB** — la brique collaboration : web, plugin VST et la section COLAB de l'app SYNK. Monochrome bleu, clair **et** sombre, IBM Plex Sans. Voir [COLAB](#colab--la-deuxième-marque).
+
+Les deux marques sont **indépendantes** : elles ne partagent ni échelle typographique, ni rayons, ni palette. Elles cohabitent volontairement — c'est ce qui fait qu'on comprend qu'on utilise COLAB et pas SYNK.
 
 > Règle d'or : **une source par élément, paramétrable.** On n'duplique pas ; on
 > ajoute un réglage. Une correction se propage partout via `npm update`.
@@ -82,6 +87,78 @@ Généré depuis le master — remplace les anciens exports :
 
 > Aperçu de tout le kit : ouvre `_brand-sheet.html`.
 
+## COLAB — la deuxième marque
+
+Direction artistique validée au chantier **C11** (2026-07-26). Les deux documents de décision
+font foi et se lisent avant toute implémentation :
+
+- [`design/colab/palette.md`](design/colab/palette.md) — la couleur : monochrome 211°, deux modes.
+- [`design/colab/direction.md`](design/colab/direction.md) — typo, densité, formes, icônes, élévation, états, sémantique.
+
+### Utilisation
+
+```js
+// web — les variables, puis les classes
+import '@synk/brand/colab/tokens.css';
+import '@synk/brand/colab/components.css';
+```
+```html
+<!-- mode clair par défaut ; le sombre s'active explicitement -->
+<div class="colab-root" data-colab-theme="dark">…</div>
+```
+```js
+// React Native / JS
+import { light, dark, theme, ramp, radius } from '@synk/brand/colab/tokens';
+
+theme(scheme).action;   // '#1B395A' en clair · '#ffffff' en sombre
+```
+
+La forme `{ light, dark }` est **volontairement identique** à celle de `Colors[scheme]` déjà
+utilisée par `Synk-App` — rien de nouveau à apprendre côté app.
+
+### Ce qui est figé, et ce qui ne l'est pas
+
+| | |
+|---|---|
+| Teinte unique | **211°**, deux saturations : `navy` (chroma pleine, mode clair + marque) et `slate` (55 %, mode sombre — les couleurs saturées vibrent sur fond noir) |
+| Couleur de marque | **`#1B395A`**, valeur fournie par l'owner, figée. Les autres étages sont calculés autour d'elle |
+| Accent | **il n'y en a pas.** L'action primaire s'inverse : navy sur blanc en clair, blanc sur navy en sombre |
+| Couleur sémantique | uniquement sur l'**icône** d'un état réel (échec, quota, succès). Jamais un fond, jamais du texte |
+| Police | IBM Plex Sans (OFL) — ne remplace **pas** Inter côté SYNK |
+| Icônes | Tabler, trait 1.75. Repli documenté : Lucide. Ne pas mélanger les deux jeux |
+
+### Mode sombre : pourquoi pas `prefers-color-scheme`
+
+Le CSS généré n'écoute **pas** la préférence système. Le mode clair est le défaut (D23,
+light-mode-first) et le sombre s'active via `[data-colab-theme="dark"]`. C'est l'application qui
+décide — elle peut lire la préférence OS en JS et poser l'attribut si elle le souhaite, mais le
+package ne lui impose pas ce comportement.
+
+### Modifier les tokens COLAB
+
+Le système est fait pour bouger — c'est une contrainte de conception, pas un accident :
+
+1. **Deux couches.** `ramp` (les primitives) → `light`/`dark` (les rôles, qui aliasent la rampe).
+   Changer un étage de rampe re-teinte tout ce qui l'alias ; changer un rôle ne bouge que lui.
+2. **Généré, jamais recopié.** `npm run build:tokens` régénère `src/colab/*` depuis
+   `tokens/colab.json`. ⚠️ **Ne jamais éditer `src/colab/tokens.*` à la main** — le prochain build
+   écrase. `npm run check:parity` le détecte.
+3. **Surchargeable à l'exécution.** Tout est en custom properties : une variable redéfinie suffit
+   à re-teinter tous les composants, sans rebuild — pratique pendant que C9 construit les écrans.
+
+### Composants
+
+`src/colab/components.css` est écrit à la main et ne contient **aucune valeur littérale** : tout
+passe par `var(--colab-*)`. Le garde-fou refuse une couleur en dur et une variable inexistante.
+
+Classes disponibles : `colab-root` · `colab-label` `colab-title` `colab-meta` `colab-num` ·
+`colab-btn` (`--primary` `--ghost` `--icon`) · `colab-input` · `colab-icon` ·
+`colab-avatar` (`--project`) `colab-avatars` `colab-tile` `colab-wordmark` ·
+`colab-row` (`aria-selected`, `data-unread`) `colab-badge` · `colab-card` `colab-floating` `colab-scrim` ·
+`colab-msg` (`--mine`) `colab-bubble` `colab-system` `colab-daysep` ·
+`colab-file` `colab-chip` (`--square`) · `colab-play` `colab-wave` ·
+`colab-notice` (`--danger` `--success`) · `colab-empty` `colab-drop` `colab-progress`.
+
 ## ⚠️ React Native (app Expo)
 Le composant `SynkLogoAnim` utilise SVG/DOM **web**. Pour l'app RN :
 - **Tokens + logos** : utilisables tels quels (`import { color } from '@synk/brand/tokens'`).
@@ -98,18 +175,38 @@ Deux jeux de valeurs coexistent dans le code :
 ```
 Synk-Brand/
 ├── src/
-│   ├── index.js              ← API publique (seul point d'entrée)
-│   ├── tokens.js             ← tokens en JS (cross-plateforme)
-│   ├── tokens.css            ← tokens en CSS custom properties
-│   ├── animation/
-│   │   ├── SynkLogoAnim.jsx  ← composant (web)
-│   │   └── logo-data.js      ← images logo (base64)
-│   └── logo/                 ← synk-mark.svg (master) + synk-icon.svg + PNG d'export
+│   ├── index.js              ← API publique SYNK (seul point d'entrée)
+│   ├── tokens.js             ← tokens SYNK en JS      ⚠ ÉCRIT À LA MAIN
+│   ├── tokens.css            ← tokens SYNK en CSS     ⚠ ÉCRIT À LA MAIN
+│   ├── animation/            ← SynkLogoAnim (web + native) + logo-data.js
+│   ├── logo/                 ← synk-mark.svg (master) + synk-icon.svg + PNG + app-icons
+│   └── colab/
+│       ├── tokens.css        ← ⚙ GÉNÉRÉ — ne pas éditer
+│       ├── tokens.js         ← ⚙ GÉNÉRÉ — ne pas éditer
+│       ├── tokens.d.ts       ← ⚙ GÉNÉRÉ — ne pas éditer
+│       └── components.css    ← écrit à la main, 100 % piloté par tokens
 ├── tokens/
-│   ├── tokens.json           ← SOURCE de vérité (DTCG)
-│   └── style-dictionary.config.mjs
-└── .github/workflows/release.yml
+│   ├── tokens.json           ← SOURCE SYNK  (DTCG)
+│   ├── colab.json            ← SOURCE COLAB (DTCG)
+│   └── style-dictionary.config.mjs   ← deux marques, formats sur mesure
+├── scripts/
+│   └── check-parity.mjs      ← le garde-fou (npm test)
+└── design/colab/             ← décisions de DA + maquettes de validation (C11)
 ```
+
+**Deux régimes, et c'est important de ne pas les confondre :**
+
+| | SYNK | COLAB |
+|---|---|---|
+| Source | `tokens/tokens.json` | `tokens/colab.json` |
+| Fichiers consommés | **écrits à la main** | **générés** |
+| Risque | dérive silencieuse entre source et copie | quelqu'un édite le fichier généré, ou oublie de rebuilder |
+| Filet | `npm run check:parity` | `npm run check:parity` |
+
+Pourquoi SYNK n'est pas généré : `src/tokens.js` a une forme *plate* (`color.surfaceCard`) que le
+format `javascript/es6` de Style Dictionary ne produit pas. La régénérer changerait la forme
+consommée par une app en production, pour zéro gain produit. On outille la dérive au lieu de la
+supprimer — le problème s'était déjà produit en v0.2.0.
 
 ## Versionnage (semver) — éviter la dette
 - `patch` : correction sans impact visuel. `minor` : ajout rétro-compatible. `major` : **changement cassant** (renommage d'export, valeur de token modifiée).
@@ -117,9 +214,18 @@ Synk-Brand/
 - L'**API publique = `src/index.js`** uniquement. Tant que ces exports ne changent pas de nom, l'intérieur peut être refactoré librement.
 
 ## Modifier les tokens
-1. Édite `tokens/tokens.json` (la source).
-2. `npm run build:tokens` → régénère `build/` (CSS/SCSS/JS).
-3. Reporte dans `src/tokens.js` / `src/tokens.css` (ou branche-les sur `build/`).
+
+**COLAB** — entièrement automatique :
+1. Édite `tokens/colab.json`.
+2. `npm run build:tokens` → régénère `src/colab/tokens.{css,js,d.ts}`.
+3. `npm run check:parity` (ou `npm test`).
 4. Commit + bump de version.
+
+**SYNK** — la copie reste manuelle, d'où le garde-fou :
+1. Édite `tokens/tokens.json` (la source).
+2. `npm run build:tokens` → régénère `build/` (CSS/SCSS/JS, non publié).
+3. **Reporte à la main** dans `src/tokens.js` et `src/tokens.css` — ce sont eux que les apps lisent.
+4. `npm run check:parity` : échoue si une couleur existe d'un côté et pas de l'autre.
+5. Commit + bump de version.
 
 Voir `CHANGELOG.md` pour l'historique.

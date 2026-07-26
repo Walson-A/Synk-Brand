@@ -1,0 +1,282 @@
+<title>COLAB — trancher le mode sombre</title>
+
+<style>
+  :root {
+    --ink: #12161c; --ink-2: #4a5462; --ink-3: #79838f;
+    --page: #fcfcfd; --panel: #ffffff;
+    --line: rgba(18,22,28,0.11); --line-soft: rgba(18,22,28,0.06);
+    --mark: #b45309; --ok: #0f7a4d;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #e7eaef; --ink-2: #9aa5b3; --ink-3: #6b7683;
+      --page: #0d1015; --panel: #14181f;
+      --line: rgba(231,234,239,0.13); --line-soft: rgba(231,234,239,0.07);
+      --mark: #e0a458; --ok: #4ec08a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #e7eaef; --ink-2: #9aa5b3; --ink-3: #6b7683;
+    --page: #0d1015; --panel: #14181f;
+    --line: rgba(231,234,239,0.13); --line-soft: rgba(231,234,239,0.07);
+    --mark: #e0a458; --ok: #4ec08a;
+  }
+  :root[data-theme="light"] {
+    --ink: #12161c; --ink-2: #4a5462; --ink-3: #79838f;
+    --page: #fcfcfd; --panel: #ffffff;
+    --line: rgba(18,22,28,0.11); --line-soft: rgba(18,22,28,0.06);
+    --mark: #b45309; --ok: #0f7a4d;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font-family: var(--sans); font-size: 15px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 40px 24px 96px; }
+
+  .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+  h1 { margin: 8px 0 10px; font-size: clamp(26px,3.4vw,38px); line-height: 1.08; letter-spacing: -.025em; font-weight: 680; text-wrap: balance; }
+  .lede { margin: 0; max-width: 70ch; color: var(--ink-2); font-size: 16px; }
+  h2 { margin: 54px 0 4px; font-size: 19px; letter-spacing: -.015em; font-weight: 640; }
+  h3 { margin: 34px 0 12px; font-size: 13px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+  .note { margin: 0 0 20px; max-width: 76ch; color: var(--ink-2); font-size: 14px; }
+  .inline-code { font-family: var(--mono); font-size: .88em; background: var(--line-soft); padding: 1px 5px; border-radius: 4px; }
+
+  .callout {
+    border-left: 3px solid var(--mark); background: color-mix(in srgb, var(--mark) 7%, transparent);
+    padding: 13px 16px; border-radius: 0 8px 8px 0; font-size: 13.5px; color: var(--ink-2); max-width: 78ch;
+  }
+  .callout strong { color: var(--ink); }
+  .callout.done { border-left-color: var(--ok); background: color-mix(in srgb, var(--ok) 8%, transparent); }
+
+  .duo { display: flex; height: 96px; border-radius: 9px; overflow: hidden; border: 1px solid var(--line); }
+  .duo > i { display: block; }
+
+  .comp { aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; display: grid; grid-template-columns: 19% 1fr; border: 1px solid var(--line); }
+  .comp-rail { padding: 9px 7px; display: flex; flex-direction: column; gap: 5px; }
+  .rail-row { display: flex; align-items: center; gap: 5px; padding: 5px; border-radius: 4px; }
+  .rail-sq { width: 13%; aspect-ratio: 1; border-radius: 3px; flex: none; }
+  .rail-lines { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .rail-lines > b { height: 4px; border-radius: 2px; display: block; }
+  .rail-dot { width: 8px; height: 8px; border-radius: 999px; flex: none; }
+  .comp-main { padding: 9px 11px; display: flex; flex-direction: column; gap: 7px; }
+  .comp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 8px; }
+  .head-lines { display: flex; flex-direction: column; gap: 4px; width: 44%; }
+  .head-lines > b { height: 5px; border-radius: 2px; display: block; }
+  .head-act { width: 62px; height: 17px; border-radius: 4px; }
+  .blob { height: 26px; border-radius: 6px; }
+  .filerow { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; }
+  .file-sq { width: 26px; height: 26px; border-radius: 4px; flex: none; }
+  .file-lines { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .file-lines > b { height: 4px; border-radius: 2px; display: block; }
+  .wave { display: flex; align-items: center; gap: 1.5px; height: 22px; width: 27%; flex: none; }
+  .wave i { flex: 1; border-radius: 1px; }
+  .comp-foot { margin-top: auto; display: flex; gap: 7px; align-items: center; }
+  .foot-input { flex: 1; height: 24px; border-radius: 5px; }
+  .foot-act { width: 66px; height: 24px; border-radius: 5px; flex: none; }
+
+  .grid { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+  .item { display: flex; flex-direction: column; gap: 9px; }
+  .item-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .item-n { font-size: 14px; font-weight: 650; letter-spacing: -.01em; }
+  .item-hex { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .item-d { font-size: 12.5px; color: var(--ink-2); margin: 0; }
+  .pill { font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-3); }
+  .pill-seen { color: var(--mark); border-color: color-mix(in srgb, var(--mark) 40%, transparent); }
+  .pill-new { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+  .solo { max-width: 520px; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">COLAB · chantier C11 · dernière porte couleur</div>
+  <h1>Croiser les deux axes</h1>
+  <p class="lede">
+    Toujours aucune typographie, aucun composant. Ton hésitation portait sur deux axes différents —
+    la <strong>profondeur du fond</strong> et la <strong>quantité de chroma</strong>. Ils se croisent,
+    et la case qui répond vraiment à ta question ne t'a jamais été montrée.
+  </p>
+
+  <div class="callout done" style="margin-top:22px">
+    <strong>Figé : mode clair, action navy.</strong> Fond blanc, tout ce qui agit en
+    <span class="inline-code">#1B395A</span>. Aucune valeur lumineuse à l'écran — le bleu franc
+    <span class="inline-code">600</span> sort du système. Je ne le rouvre plus.
+  </div>
+
+  <h3>Le mode clair, figé</h3>
+  <div class="solo" id="lightComp"></div>
+
+  <h2>Ce qui reste à trancher</h2>
+  <p class="note">
+    Deux profondeurs de fond × trois quantités de chroma. Chaque case montre d'abord les deux
+    couleurs qui se rencontrent — le fond et la carte, nues, sans structure — puis la composition.
+  </p>
+
+  <h3>Chroma plein — la teinte à pleine saturation</h3>
+  <div class="grid" id="rowA"></div>
+
+  <h3>Ardoise — moitié moins de chroma partout</h3>
+  <div class="callout" style="margin:0 0 20px">
+    <strong>Ce que l'ardoise coûte.</strong> Désaturer toute la famille change aussi ta carte :
+    <span class="inline-code">#1B395A</span> devient <span class="inline-code">#293A4C</span>.
+    Plus calme, mais ce n'est plus la couleur que tu as choisie.
+  </div>
+  <div class="grid" id="rowB"></div>
+
+  <h3>Hybride — ta carte intacte, l'entourage désaturé</h3>
+  <div class="callout" style="margin:0 0 20px">
+    <strong>La piste que je te propose.</strong> <span class="inline-code">#1B395A</span> reste
+    exactement lui-même, mais le fond, les puces et les bordures perdent leur chroma. Résultat : ta
+    couleur est la <strong>seule chose colorée de l'écran</strong>, donc elle ressort au lieu de se
+    diluer dans une famille entière qui tire au bleu.
+  </div>
+  <div class="grid" id="rowC"></div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const hsl = (h, s, l) => {
+    s /= 100; l /= 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    const seg = [[c,x,0],[x,c,0],[0,c,x],[0,x,c],[x,0,c],[c,0,x]][Math.floor(h / 60) % 6];
+    return "#" + seg.map(v => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join("");
+  };
+
+  const H = 211;
+  const ramp = (sat = 1) => ({
+    50:  hsl(H, 60 * sat, 97), 100: hsl(H, 55 * sat, 93), 200: hsl(H, 48 * sat, 85),
+    300: hsl(H, 42 * sat, 73), 400: hsl(H, 44 * sat, 58), 500: hsl(H, 52 * sat, 45),
+    600: hsl(H, 66 * sat, 36), 700: hsl(H, 62 * sat, 29), 800: hsl(H, 54 * sat, 23),
+    900: hsl(H, 56 * sat, 14), 950: hsl(H, 55 * sat, 8), ink: hsl(H, 48 * sat, 5)
+  });
+
+  const FULL = ramp(1);   FULL[800] = "#1B395A";   /* ta valeur, figée */
+  const SLATE = ramp(0.55);
+  const WHITE = "#ffffff";
+
+  const WAVE = Array.from({ length: 16 }, (_, i) =>
+    Math.round(26 + 68 * Math.abs(Math.sin(i * .9) * Math.cos(i * .4)))
+  );
+
+  const comp = t => `
+    <div class="comp" style="background:${t.canvas}">
+      <div class="comp-rail" style="background:${t.rail};border-right:1px solid ${t.line}">
+        ${[1, 0, 0, 1, 0].map((sel, i) => `
+          <div class="rail-row" style="background:${sel ? t.sel : "transparent"}">
+            <div class="rail-sq" style="background:${sel ? t.act : t.chip}"></div>
+            <div class="rail-lines">
+              <b style="width:${72 - i * 6}%;background:${sel ? t.mass : t.massSoft}"></b>
+              <b style="width:${52 - i * 4}%;background:${t.massSoft};opacity:.6"></b>
+            </div>
+            ${i === 0 || i === 3 ? `<span class="rail-dot" style="background:${t.live}"></span>` : ""}
+          </div>`).join("")}
+      </div>
+      <div class="comp-main">
+        <div class="comp-head" style="border-bottom:1px solid ${t.line}">
+          <div class="head-lines">
+            <b style="width:78%;background:${t.mass}"></b>
+            <b style="width:46%;background:${t.massSoft};opacity:.7"></b>
+          </div>
+          <div class="head-act" style="border:1px solid ${t.line}"></div>
+        </div>
+        <div class="blob" style="width:62%;background:${t.surface}"></div>
+        <div class="blob" style="width:44%;background:${t.act};margin-left:auto"></div>
+        <div class="blob" style="width:54%;background:${t.surface}"></div>
+        <div class="filerow" style="background:${t.surface};border:1px solid ${t.line}">
+          <div class="file-sq" style="background:${t.chip}"></div>
+          <div class="file-lines">
+            <b style="width:58%;background:${t.mass}"></b>
+            <b style="width:38%;background:${t.massSoft};opacity:.7"></b>
+          </div>
+          <div class="wave">
+            ${WAVE.map((h, i) => `<i style="height:${h}%;background:${i < 7 ? t.live : t.wave}"></i>`).join("")}
+          </div>
+        </div>
+        <div class="comp-foot">
+          <div class="foot-input" style="background:${t.surface};border:1px solid ${t.line}"></div>
+          <div class="foot-act" style="background:${t.act}"></div>
+        </div>
+      </div>
+    </div>`;
+
+  /* les deux couleurs qui se rencontrent, sans aucune structure */
+  const duo = t => `<div class="duo">
+      <i style="flex:0 0 58%;background:${t.canvas}"></i>
+      <i style="flex:0 0 30%;background:${t.surface}"></i>
+      <i style="flex:0 0 12%;background:${t.chip}"></i>
+    </div>`;
+
+  /* mode clair, figé */
+  const LIGHT = {
+    canvas: WHITE, rail: FULL[50], surface: FULL[50], sel: FULL[100], chip: FULL[100],
+    line: FULL[200], mass: FULL[950], massSoft: FULL[400], wave: FULL[300],
+    act: FULL[800], live: FULL[950]
+  };
+  document.getElementById("lightComp").innerHTML = comp(LIGHT);
+
+  /* un thème sombre : R = famille de l'entourage, card = la surface, sat = chroma de l'entourage */
+  const mk = (R, card, canvasKey, sat) => ({
+    canvas: R[canvasKey],
+    rail: hsl(H, 55 * sat, canvasKey === "ink" ? 3 : 6),
+    surface: card, sel: card,
+    chip: hsl(H, 50 * sat, 26),
+    line: hsl(H, 44 * sat, 24),
+    mass: R[50], massSoft: R[300],
+    wave: hsl(H, 36 * sat, 38),
+    act: WHITE, live: WHITE
+  });
+
+  const ROWS = {
+    rowA: {
+      sat: 1, R: FULL, card: FULL[800],
+      opts: [
+        { key: "950", n: "Chroma plein · fond 950", tag: ["vu", "pill-seen"],
+          d: "Le fond que tu as déjà vu à cette saturation." },
+        { key: "ink", n: "Chroma plein · fond encre", tag: ["ton penchant", "pill-seen"],
+          d: "Ce vers quoi tu penches. Fond quasi noir, carte à pleine chroma." }
+      ]
+    },
+    rowB: {
+      sat: 0.55, R: SLATE, card: SLATE[800],
+      opts: [
+        { key: "950", n: "Ardoise · fond 950", tag: ["vu", "pill-seen"],
+          d: "La famille désaturée que tu as vue. Ta carte y est devenue #293A4C." },
+        { key: "ink", n: "Ardoise · fond encre", tag: ["jamais montré", "pill-new"],
+          d: "La case manquante : le croisement exact de ton hésitation." }
+      ]
+    },
+    rowC: {
+      sat: 0.55, R: SLATE, card: FULL[800],
+      opts: [
+        { key: "950", n: "Hybride · fond 950", tag: null,
+          d: "Entourage calme, ta couleur intacte, fond encore un peu haut." },
+        { key: "ink", n: "Hybride · fond encre", tag: ["la piste", "pill-new"],
+          d: "Fond quasi noir et neutre, entourage sans chroma, #1B395A seul à porter la couleur." }
+      ]
+    }
+  };
+
+  for (const [id, row] of Object.entries(ROWS)) {
+    document.getElementById(id).innerHTML = row.opts.map(o => {
+      const t = mk(row.R, row.card, o.key, row.sat);
+      return `<div class="item">
+        <div class="item-h">
+          <span class="item-n">${o.n}</span>
+          <span class="item-hex">fond ${t.canvas.toUpperCase()} · carte ${row.card.toUpperCase()}</span>
+          ${o.tag ? `<span class="pill ${o.tag[1]}">${o.tag[0]}</span>` : ""}
+        </div>
+        <p class="item-d">${o.d}</p>
+        ${duo(t)}
+        ${comp(t)}
+      </div>`;
+    }).join("");
+  }
+})();
+</script>

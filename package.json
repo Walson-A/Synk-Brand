@@ -24,6 +24,12 @@
       "default": "./src/tokens.js"
     },
     "./tokens.css": "./src/tokens.css",
+    "./colab/tokens": {
+      "types": "./src/colab/tokens.d.ts",
+      "default": "./src/colab/tokens.js"
+    },
+    "./colab/tokens.css": "./src/colab/tokens.css",
+    "./colab/components.css": "./src/colab/components.css",
     "./logo/*": "./src/logo/*",
     "./package.json": "./package.json"
   },
@@ -36,7 +42,8 @@
   ],
   "scripts": {
     "build:tokens": "style-dictionary build --config tokens/style-dictionary.config.mjs",
-    "test": "echo \"(no tests yet)\" && exit 0"
+    "check:parity": "node scripts/check-parity.mjs",
+    "test": "npm run check:parity"
   },
   "peerDependencies": {
     "react": ">=18"

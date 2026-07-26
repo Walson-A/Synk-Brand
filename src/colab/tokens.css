@@ -1,0 +1,152 @@
+/**
+ * COLAB — variables CSS. GÉNÉRÉ depuis tokens/colab.json, ne pas éditer.
+ *   npm run build:tokens
+ *
+ * Le mode CLAIR est le défaut (D23 : light-mode-first). Le mode sombre s'active
+ * explicitement via [data-colab-theme="dark"] — volontairement PAS via
+ * prefers-color-scheme : c'est l'application qui décide, pas l'OS. Elle peut lire
+ * la préférence système en JS et poser l'attribut si elle le souhaite.
+ *
+ * Tout est surchargeable à l'exécution : une seule custom property redéfinie
+ * suffit à re-teinter tous les composants, sans rebuild.
+ */
+
+:root {
+  --colab-navy-50: #f3f7fc;
+  --colab-navy-100: #e3edf7;
+  --colab-navy-200: #c6d8eb;
+  --colab-navy-300: #9db9d7;
+  --colab-navy-400: #6592c3;
+  --colab-navy-500: #3771ae;
+  --colab-navy-600: #1f5a98;
+  --colab-navy-700: #1c4878;
+  --colab-navy-800: #1B395A;
+  --colab-navy-900: #102338;
+  --colab-navy-950: #091420;
+  --colab-navy-ink: #070d13;
+  --colab-slate-50: #f5f7fa;
+  --colab-slate-100: #e8edf3;
+  --colab-slate-200: #cfd8e3;
+  --colab-slate-300: #aabaca;
+  --colab-slate-400: #7a93ae;
+  --colab-slate-500: #527294;
+  --colab-slate-600: #3a5b7d;
+  --colab-slate-700: #314963;
+  --colab-slate-800: #293a4c;
+  --colab-slate-900: #19232f;
+  --colab-slate-950: #0e141b;
+  --colab-slate-ink: #090d10;
+  --colab-white: #ffffff;
+
+  --colab-font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --colab-font-weight-regular: 400;
+  --colab-font-weight-medium: 500;
+  --colab-font-weight-semibold: 600;
+  --colab-font-weight-bold: 700;
+  --colab-font-weight-extrabold: 800;
+  --colab-font-size-label: 11px;
+  --colab-font-size-sm: 12.5px;
+  --colab-font-size-body: 14.5px;
+  --colab-font-size-title: 15px;
+  --colab-font-size-big: 17px;
+  --colab-font-leading-tight: 1.15;
+  --colab-font-leading-snug: 1.35;
+  --colab-font-leading-normal: 1.5;
+  --colab-font-tracking-title: -0.012em;
+  --colab-font-tracking-body: 0;
+  --colab-font-tracking-button: 0.1em;
+  --colab-font-tracking-label: 0.13em;
+  --colab-radius-sm: 8px;
+  --colab-radius-md: 11px;
+  --colab-radius-lg: 14px;
+  --colab-radius-full: 999px;
+  --colab-space-1: 4px;
+  --colab-space-2: 8px;
+  --colab-space-3: 10px;
+  --colab-space-4: 12px;
+  --colab-space-5: 14px;
+  --colab-space-6: 18px;
+  --colab-space-7: 20px;
+  --colab-space-8: 24px;
+  --colab-size-avatar: 27px;
+  --colab-size-icon-sm: 14px;
+  --colab-size-icon-md: 16px;
+  --colab-size-icon-lg: 18px;
+  --colab-size-icon-xl: 21px;
+  --colab-size-rail: 246px;
+  --colab-size-aside: 262px;
+  --colab-size-wave-bar: 2px;
+  --colab-border-width: 1px;
+  --colab-border-icon-stroke: 1.75;
+  --colab-border-sel-bar: 3px;
+  --colab-shadow-floating: 0 8px 24px -6px rgba(9,20,32,0.18);
+  --colab-shadow-floating-dark: 0 8px 24px -6px rgba(0,0,0,0.72);
+  --colab-motion-fast: 120ms;
+  --colab-motion-base: 200ms;
+  --colab-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  --colab-motion-disabled-opacity: 0.42;
+
+  --colab-canvas: #ffffff;
+  --colab-rail: #f3f7fc;
+  --colab-surface: #f3f7fc;
+  --colab-chip: #e3edf7;
+  --colab-border: #c6d8eb;
+  --colab-text: #091420;
+  --colab-text-muted: #527294;
+  --colab-action: #1B395A;
+  --colab-on-action: #ffffff;
+  --colab-brand: #1B395A;
+  --colab-ring: #1B395A;
+  --colab-wave: #9db9d7;
+  --colab-wave-played: #091420;
+  --colab-hover: #eef4fb;
+  --colab-selected: #e3edf7;
+  --colab-selected-hover: #d7e6f4;
+  --colab-danger: #b42318;
+  --colab-success: #067647;
+  --colab-scrim: rgba(9,20,32,0.42);
+}
+
+[data-colab-theme='light'] {
+  --colab-canvas: #ffffff;
+  --colab-rail: #f3f7fc;
+  --colab-surface: #f3f7fc;
+  --colab-chip: #e3edf7;
+  --colab-border: #c6d8eb;
+  --colab-text: #091420;
+  --colab-text-muted: #527294;
+  --colab-action: #1B395A;
+  --colab-on-action: #ffffff;
+  --colab-brand: #1B395A;
+  --colab-ring: #1B395A;
+  --colab-wave: #9db9d7;
+  --colab-wave-played: #091420;
+  --colab-hover: #eef4fb;
+  --colab-selected: #e3edf7;
+  --colab-selected-hover: #d7e6f4;
+  --colab-danger: #b42318;
+  --colab-success: #067647;
+  --colab-scrim: rgba(9,20,32,0.42);
+}
+
+[data-colab-theme='dark'] {
+  --colab-canvas: #090d10;
+  --colab-rail: #05080a;
+  --colab-surface: #293a4c;
+  --colab-chip: #304254;
+  --colab-border: #2f3d4c;
+  --colab-text: #f5f7fa;
+  --colab-text-muted: #aabaca;
+  --colab-action: #ffffff;
+  --colab-on-action: #0e141b;
+  --colab-brand: #1B395A;
+  --colab-ring: #f5f7fa;
+  --colab-wave: #527294;
+  --colab-wave-played: #f5f7fa;
+  --colab-hover: #141c25;
+  --colab-selected: #293a4c;
+  --colab-selected-hover: #32465a;
+  --colab-danger: #ef8b84;
+  --colab-success: #47cd89;
+  --colab-scrim: rgba(0,0,0,0.58);
+}

@@ -3,6 +3,38 @@
 Toutes les modifications notables de `@synk/brand`. Format basé sur
 [Keep a Changelog](https://keepachangelog.com/) · versionnage [SemVer](https://semver.org/lang/fr/).
 
+## [Non publié]
+
+Chantier **C11 — direction artistique COLAB**. Le package devient multi-marque.
+**Purement additif : aucun fichier SYNK modifié**, et les consommateurs épinglent un tag
+(`#v0.5.0` / `#v0.5.1`) — rien ne bouge chez eux tant qu'ils ne le décident pas.
+
+### Ajouté
+- **Marque COLAB.** Source `tokens/colab.json` (DTCG), en deux couches : `ramp` (primitives,
+  une seule teinte 211° en deux saturations) → `light`/`dark` (les rôles, qui aliasent la rampe).
+  Changer un étage re-teinte tout ce qui l'alias ; changer un rôle ne bouge que lui.
+- **Sorties générées** `src/colab/tokens.css`, `tokens.js`, `tokens.d.ts`. La forme `{ light, dark }`
+  reprend volontairement celle de `Colors[scheme]` déjà utilisée par Synk-App.
+- **`src/colab/components.css`** : composants agnostiques du framework (bouton, ligne de liste avec
+  ses six états, carte, bulle, carte de fichier, lecteur + waveform, message sémantique, état vide,
+  zone de dépôt…). Aucune valeur littérale — tout passe par `var(--colab-*)`.
+- Exports `./colab/tokens`, `./colab/tokens.css`, `./colab/components.css`.
+- **`scripts/check-parity.mjs`** (`npm run check:parity`, branché sur `npm test`) : détecte la dérive
+  SYNK entre source et copies manuelles, un fichier COLAB généré édité à la main, un rôle présent
+  dans un seul des deux modes, une `var(--colab-…)` inexistante utilisée par les composants, et une
+  couleur en dur oubliée. Le premier de ces problèmes s'était déjà produit en v0.2.0.
+- **`design/colab/`** : les décisions de DA (`palette.md`, `direction.md`) et les pages de validation
+  du chantier, avec leurs scripts de build reproductibles.
+
+### Changé
+- `tokens/style-dictionary.config.mjs` gère désormais **deux marques filtrées** et des formats sur
+  mesure. Les plateformes SYNK sont filtrées pour produire exactement la même sortie qu'avant.
+
+### Note d'architecture
+Les deux marques sont **délibérément indépendantes** — pas de « base commune + surcouches ». Elles
+n'ont ni la même échelle typographique ni les mêmes rayons ; les forcer dans une base partagée
+créerait un couplage faux, où toucher un token COLAB deviendrait risqué pour SYNK.
+
 ## [0.5.1] — 2026-06-21
 ### Changé
 - **Logos couleur régénérés en 2048px** (depuis le master, RGBA, bords nets) :

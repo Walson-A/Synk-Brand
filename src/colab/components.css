@@ -1,0 +1,463 @@
+/**
+ * COLAB — composants. Écrit à la main (contrairement à tokens.css qui est généré).
+ *
+ * Règle absolue : AUCUNE valeur littérale ici. Tout passe par var(--colab-*).
+ * C'est ce qui rend le système modifiable — changer un token re-teinte tous les
+ * composants, y compris à l'exécution, sans rebuild.
+ *
+ * Agnostique du framework : ce sont des classes, pas des composants React. C9
+ * (web), C10 (plugin) et C8 (app) les habillent chacun à leur façon ; l'app RN
+ * lit les mêmes valeurs via @synk/brand/colab/tokens.
+ *
+ * Import :
+ *   import '@synk/brand/colab/tokens.css';      // d'abord — les variables
+ *   import '@synk/brand/colab/components.css';  // ensuite — les classes
+ *
+ * Mode sombre : poser [data-colab-theme="dark"] sur un ancêtre.
+ */
+
+/* ─────────────────────────────────────────────────────────── socle ── */
+
+.colab-root {
+  font-family: var(--colab-font-sans);
+  font-size: var(--colab-font-size-body);
+  line-height: var(--colab-font-leading-normal);
+  color: var(--colab-text);
+  background: var(--colab-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Étiquette de section : « PROJETS », « FICHIERS RÉCENTS »… */
+.colab-label {
+  font-size: var(--colab-font-size-label);
+  font-weight: var(--colab-font-weight-bold);
+  letter-spacing: var(--colab-font-tracking-label);
+  text-transform: uppercase;
+  color: var(--colab-text-muted);
+}
+
+.colab-title {
+  font-size: var(--colab-font-size-big);
+  font-weight: var(--colab-font-weight-bold);
+  letter-spacing: var(--colab-font-tracking-title);
+  line-height: var(--colab-font-leading-tight);
+}
+
+.colab-meta {
+  font-size: var(--colab-font-size-sm);
+  color: var(--colab-text-muted);
+}
+
+/* Partout où des chiffres s'alignent ou changent en direct. */
+.colab-num { font-variant-numeric: tabular-nums; }
+
+/* Anneau de focus — un seul geste pour tout le système. */
+.colab-focusable:focus-visible,
+.colab-btn:focus-visible,
+.colab-row:focus-visible,
+.colab-input:focus-within {
+  outline: 2px solid var(--colab-ring);
+  outline-offset: 2px;
+}
+
+/* ────────────────────────────────────────────────────────── boutons ── */
+
+.colab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--colab-space-2);
+  padding: var(--colab-space-3) var(--colab-space-5);
+  border: var(--colab-border-width) solid transparent;
+  border-radius: var(--colab-radius-sm);
+  font-family: inherit;
+  font-size: var(--colab-font-size-sm);
+  font-weight: var(--colab-font-weight-bold);
+  letter-spacing: var(--colab-font-tracking-button);
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--colab-motion-fast) var(--colab-motion-ease),
+              color var(--colab-motion-fast) var(--colab-motion-ease);
+}
+
+.colab-btn--primary {
+  background: var(--colab-action);
+  color: var(--colab-on-action);
+}
+.colab-btn--primary:hover { opacity: 0.9; }
+
+.colab-btn--ghost {
+  background: transparent;
+  color: var(--colab-text);
+  border-color: var(--colab-border);
+}
+.colab-btn--ghost:hover { background: var(--colab-hover); }
+
+.colab-btn--icon {
+  padding: 0;
+  width: calc(var(--colab-size-avatar) + var(--colab-space-1));
+  height: calc(var(--colab-size-avatar) + var(--colab-space-1));
+  justify-content: center;
+  background: transparent;
+  color: var(--colab-text-muted);
+  border-color: var(--colab-border);
+}
+.colab-btn--icon:hover { background: var(--colab-hover); color: var(--colab-text); }
+
+.colab-btn[disabled],
+.colab-btn[aria-disabled='true'] {
+  opacity: var(--colab-motion-disabled-opacity);
+  pointer-events: none;
+}
+
+.colab-btn .colab-icon { width: var(--colab-size-icon-sm); height: var(--colab-size-icon-sm); }
+.colab-btn--icon .colab-icon { width: var(--colab-size-icon-md); height: var(--colab-size-icon-md); }
+
+/* ───────────────────────────────────────────────────────── icônes ── */
+
+.colab-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--colab-size-icon-lg);
+  height: var(--colab-size-icon-lg);
+  color: currentColor;
+}
+.colab-icon svg { width: 100%; height: 100%; display: block; }
+/* Tabler est un jeu tracé : l'épaisseur est un token, pas une valeur du SVG. */
+.colab-icon svg[stroke] { stroke-width: var(--colab-border-icon-stroke); }
+
+/* ──────────────────────────────────────────────────────── saisie ── */
+
+.colab-input {
+  display: flex;
+  align-items: center;
+  gap: var(--colab-space-2);
+  padding: var(--colab-space-3) var(--colab-space-5);
+  background: var(--colab-surface);
+  border: var(--colab-border-width) solid var(--colab-border);
+  border-radius: var(--colab-radius-sm);
+  color: var(--colab-text);
+  font-family: inherit;
+  font-size: var(--colab-font-size-sm);
+}
+.colab-input::placeholder { color: var(--colab-text-muted); }
+
+/* ────────────────────────────────────────── avatars & personnes ── */
+
+/* La FORME encode le type — ce qui évite d'avoir à le coder par la couleur. */
+.colab-avatar {
+  width: var(--colab-size-avatar);
+  height: var(--colab-size-avatar);
+  flex: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--colab-chip);
+  color: var(--colab-text-muted);
+  font-size: var(--colab-font-size-label);
+  font-weight: var(--colab-font-weight-bold);
+  border-radius: var(--colab-radius-full);   /* personne → cercle */
+}
+.colab-avatar--project { border-radius: var(--colab-radius-sm); }  /* projet → carré */
+.colab-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Tuile de marque : le seul endroit où --colab-brand apparaît en mode sombre,
+   la chroma pleine y étant réservée au logo. */
+.colab-tile {
+  width: calc(var(--colab-size-avatar) + var(--colab-space-1));
+  height: calc(var(--colab-size-avatar) + var(--colab-space-1));
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--colab-radius-sm);
+  background: var(--colab-brand);
+  color: var(--colab-white);
+}
+.colab-tile .colab-icon { width: var(--colab-size-icon-xl); height: var(--colab-size-icon-xl); }
+
+.colab-wordmark {
+  font-size: var(--colab-font-size-title);
+  font-weight: var(--colab-font-weight-bold);
+  letter-spacing: var(--colab-font-tracking-button);
+}
+
+.colab-avatars { display: flex; }
+.colab-avatars > .colab-avatar {
+  margin-left: calc(var(--colab-space-2) * -1);
+  box-shadow: 0 0 0 2px var(--colab-rail);
+}
+.colab-avatars > .colab-avatar:first-child { margin-left: 0; }
+
+/* ───────────────────────────────────────────────── ligne de liste ── */
+
+.colab-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--colab-space-3);
+  padding: var(--colab-space-2) var(--colab-space-3);
+  border-radius: var(--colab-radius-sm);
+  cursor: pointer;
+  transition: background var(--colab-motion-fast) var(--colab-motion-ease);
+}
+.colab-row:hover { background: var(--colab-hover); }
+
+.colab-row[aria-selected='true'] { background: var(--colab-selected); }
+.colab-row[aria-selected='true']:hover { background: var(--colab-selected-hover); }
+
+/* La barre est indispensable, pas décorative : en mode clair l'écart de
+   luminance entre « sélectionné » et « sélectionné + survol » tombe à 1,073,
+   sous le seuil du perceptible. La forme prend le relais de la clarté. */
+.colab-row[aria-selected='true']::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--colab-border-sel-bar);
+  height: 62%;
+  border-radius: 0 var(--colab-border-sel-bar) var(--colab-border-sel-bar) 0;
+  background: var(--colab-text);
+}
+
+.colab-row__body { flex: 1; min-width: 0; }
+.colab-row__name {
+  display: block;
+  font-size: var(--colab-font-size-sm);
+  font-weight: var(--colab-font-weight-semibold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.colab-row__sub {
+  display: block;
+  font-size: var(--colab-font-size-label);
+  color: var(--colab-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Non lu : le GRAS code déjà ça — d'où le refus d'utiliser la graisse pour la
+   sélection, qui entrerait en conflit. */
+.colab-row[data-unread='true'] .colab-row__name { font-weight: var(--colab-font-weight-bold); }
+
+.colab-badge {
+  flex: none;
+  min-width: calc(var(--colab-space-4) + var(--colab-space-2));
+  height: calc(var(--colab-space-4) + var(--colab-space-2));
+  padding: 0 var(--colab-space-2);
+  display: grid;
+  place-items: center;
+  border-radius: var(--colab-radius-full);
+  background: var(--colab-action);
+  color: var(--colab-on-action);
+  font-size: var(--colab-font-size-label);
+  font-weight: var(--colab-font-weight-extrabold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ──────────────────────────────────────────────── cartes & surfaces ── */
+
+/* Fond + filet, aucune ombre : une ombre est invisible sur le canvas sombre,
+   donc elle ne marcherait qu'en clair — et un procédé valable dans un seul
+   mode n'en est pas un. */
+.colab-card {
+  background: var(--colab-surface);
+  border: var(--colab-border-width) solid var(--colab-border);
+  border-radius: var(--colab-radius-md);
+  padding: var(--colab-space-4) var(--colab-space-5);
+}
+
+/* Seule exception : ce qui flotte au-dessus d'un contenu qui défile. */
+.colab-floating {
+  background: var(--colab-surface);
+  border: var(--colab-border-width) solid var(--colab-border);
+  border-radius: var(--colab-radius-lg);
+  box-shadow: var(--colab-shadow-floating);
+}
+[data-colab-theme='dark'] .colab-floating { box-shadow: var(--colab-shadow-floating-dark); }
+
+.colab-scrim { position: fixed; inset: 0; background: var(--colab-scrim); }
+
+/* ──────────────────────────────────────────────────────── messages ── */
+
+.colab-msg { display: flex; align-items: flex-end; gap: var(--colab-space-2); }
+.colab-msg--mine { flex-direction: row-reverse; }
+
+.colab-bubble {
+  max-width: 74%;
+  padding: var(--colab-space-3) var(--colab-space-5);
+  border-radius: var(--colab-radius-md);
+  background: var(--colab-surface);
+  color: var(--colab-text);
+}
+.colab-msg--mine .colab-bubble {
+  background: var(--colab-action);
+  color: var(--colab-on-action);
+}
+.colab-bubble__time {
+  margin-top: var(--colab-space-1);
+  font-size: var(--colab-font-size-label);
+  color: var(--colab-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.colab-msg--mine .colab-bubble__time { color: var(--colab-on-action); opacity: 0.62; }
+
+/* Message système : rendu côté client pour l'i18n (D25) — jamais stocké traduit. */
+.colab-system {
+  text-align: center;
+  font-size: var(--colab-font-size-sm);
+  color: var(--colab-text-muted);
+}
+
+.colab-daysep {
+  display: flex;
+  align-items: center;
+  gap: var(--colab-space-3);
+}
+.colab-daysep::before,
+.colab-daysep::after {
+  content: '';
+  flex: 1;
+  height: var(--colab-border-width);
+  background: var(--colab-border);
+}
+
+/* ──────────────────────────────────────────────── fichiers & versions ── */
+
+.colab-file {
+  display: flex;
+  align-items: center;
+  gap: var(--colab-space-4);
+  padding: var(--colab-space-3) var(--colab-space-5);
+  background: var(--colab-surface);
+  border: var(--colab-border-width) solid var(--colab-border);
+  border-radius: var(--colab-radius-md);
+}
+.colab-file__body { flex: 1; min-width: 0; }
+.colab-file__name {
+  display: flex;
+  align-items: center;
+  gap: var(--colab-space-2);
+  font-size: var(--colab-font-size-sm);
+  font-weight: var(--colab-font-weight-semibold);
+}
+
+/* Type de fichier : pastille TEXTE monochrome. Pas de couleur par extension —
+   D9 accepte tous les formats, il y en aurait trop, et ça casserait le monochrome. */
+.colab-chip {
+  display: inline-grid;
+  place-items: center;
+  padding: 0 var(--colab-space-2);
+  border-radius: var(--colab-radius-sm);
+  background: var(--colab-chip);
+  color: var(--colab-text-muted);
+  font-size: var(--colab-font-size-label);
+  font-weight: var(--colab-font-weight-extrabold);
+  letter-spacing: var(--colab-font-tracking-button);
+}
+.colab-chip--square {
+  width: calc(var(--colab-size-avatar) + var(--colab-space-2));
+  height: calc(var(--colab-size-avatar) + var(--colab-space-2));
+  padding: 0;
+  flex: none;
+}
+
+/* ──────────────────────────────────────────────────────── lecteur ── */
+
+.colab-play {
+  width: calc(var(--colab-size-avatar) + var(--colab-space-1));
+  height: calc(var(--colab-size-avatar) + var(--colab-space-1));
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--colab-radius-full);
+  background: var(--colab-action);
+  color: var(--colab-on-action);
+  cursor: pointer;
+}
+.colab-play .colab-icon { width: var(--colab-size-icon-sm); height: var(--colab-size-icon-sm); }
+
+/* Waveform : la tête de lecture EST la frontière entre deux couleurs.
+   Pas de dégradé, pas de pulsation. */
+.colab-wave {
+  display: flex;
+  align-items: center;
+  gap: var(--colab-size-wave-bar);
+  height: calc(var(--colab-space-8) + var(--colab-space-1));
+  flex: none;
+}
+.colab-wave__bar {
+  flex: 1;
+  min-width: var(--colab-size-wave-bar);
+  border-radius: 1px;
+  background: var(--colab-wave);
+}
+.colab-wave__bar[data-played='true'] { background: var(--colab-wave-played); }
+
+/* ────────────────────────────────────────────────────── sémantique ── */
+
+/* La couleur ne touche QUE l'icône. Le texte reste monochrome, aucun bandeau :
+   l'information est portée par le mot, la couleur ne fait que l'accélérer —
+   ce qui la rend sûre en vision des couleurs déficiente. */
+.colab-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--colab-space-3);
+  padding: var(--colab-space-4) var(--colab-space-5);
+  background: var(--colab-surface);
+  border: var(--colab-border-width) solid var(--colab-border);
+  border-radius: var(--colab-radius-md);
+}
+.colab-notice__title { font-size: var(--colab-font-size-sm); font-weight: var(--colab-font-weight-semibold); }
+.colab-notice__body { font-size: var(--colab-font-size-label); color: var(--colab-text-muted); }
+.colab-notice--danger  > .colab-icon { color: var(--colab-danger); }
+.colab-notice--success > .colab-icon { color: var(--colab-success); }
+
+/* ───────────────────────────────────────────────────────── états ── */
+
+.colab-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--colab-space-3);
+  padding: var(--colab-space-8) var(--colab-space-5);
+  text-align: center;
+  color: var(--colab-text-muted);
+}
+.colab-empty > .colab-icon {
+  width: var(--colab-size-icon-xl);
+  height: var(--colab-size-icon-xl);
+  opacity: 0.65;
+}
+.colab-empty__title { font-size: var(--colab-font-size-title); font-weight: var(--colab-font-weight-semibold); color: var(--colab-text); }
+
+/* Zone de dépôt — le drag & drop est central côté studio (D11). */
+.colab-drop {
+  border: calc(var(--colab-border-width) * 2) dashed var(--colab-border);
+  border-radius: var(--colab-radius-md);
+  padding: var(--colab-space-8);
+  text-align: center;
+  color: var(--colab-text-muted);
+}
+.colab-drop[data-over='true'] {
+  border-color: var(--colab-action);
+  background: var(--colab-hover);
+  color: var(--colab-text);
+}
+
+/* Barre de progression d'envoi. */
+.colab-progress {
+  height: var(--colab-space-1);
+  border-radius: var(--colab-radius-full);
+  background: var(--colab-chip);
+  overflow: hidden;
+}
+.colab-progress__fill { height: 100%; background: var(--colab-action); }
+
+@media (prefers-reduced-motion: reduce) {
+  .colab-btn,
+  .colab-row { transition: none; }
+}
